@@ -32,16 +32,24 @@ Route::post('/login-customer', [AuthController::class, 'loginCustomer']); //inic
 Route::post("/signup-customer", [AuthController::class, "signupCustomer"]); // crear usuario
 
 
+
+//TODO:PREFIJOS
 Route::group(['middleware' => ["auth:sanctum"]], function () {
 
     Route::prefix('admin')->group(function () {
 
 
     });
+
+
+
     Route::prefix('driver')->group(function () {
 
 
     });
+
+
+
 
     Route::prefix('customer')->group(function () {
 

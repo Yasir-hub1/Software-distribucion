@@ -15,6 +15,16 @@ class CreateContingenciesTable extends Migration
     {
         Schema::create('contingencies', function (Blueprint $table) {
             $table->id();
+            $table->string('description')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
+            $table->string('photo')->nullable();
+
+            $table->foreignId('id_order')
+            ->nullable()
+            ->constrained('orders')
+            ->cascadeOnUpdate()/* actualizacion en cascada */
+            ->nullOnDelete(); /* y cuando se elimine quede en null */
             $table->timestamps();
         });
     }

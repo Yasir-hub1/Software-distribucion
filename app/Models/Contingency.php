@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Contingency extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'description',
+        'latitude',
+        'longitude',
+        'photo'
+    ];
+
 }

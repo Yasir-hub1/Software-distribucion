@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,39 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+//TODO: ADMIN
+
+Route::post('/login-admin', [AuthController::class, 'loginAdmin']); //iniciar session
+Route::post("/signup-admin", [AuthController::class, "signupAdmin"]); // crear usuario
+
+
+//TODO:DRIVER
+Route::post('/login-driver', [AuthController::class, 'loginDriver']); //iniciar session
+Route::post("/signup-driver", [AuthController::class, "signupDriver"]); // crear usuario
+
+
+
+//TODO:CUSTOMER
+Route::post('/login-customer', [AuthController::class, 'loginCustomer']); //iniciar session
+Route::post("/signup-customer", [AuthController::class, "signupCustomer"]); // crear usuario
+
+
+Route::group(['middleware' => ["auth:sanctum"]], function () {
+
+    Route::prefix('admin')->group(function () {
+
+
+    });
+    Route::prefix('driver')->group(function () {
+
+
+    });
+
+    Route::prefix('customer')->group(function () {
+
+
+    });
+
+
+
 });

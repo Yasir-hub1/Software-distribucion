@@ -15,6 +15,17 @@ class CreateDriversTable extends Migration
     {
         Schema::create('drivers', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable();
+            $table->string('ci')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->string('photo')->nullable();
+
+            $table->foreignId('id_cities')
+                ->nullable()
+                ->constrained('cities')
+                ->cascadeOnUpdate()/* actualizacion en cascada */
+                ->nullOnDelete(); /* y cuando se elimine quede en null */
             $table->timestamps();
         });
     }

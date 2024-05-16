@@ -1,18 +1,18 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" v-if="isAuthenticated">
     <side-bar>
       <template slot="links">
         <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" />
-        <sidebar-link to="/stats" name="User Profile" icon="ti-user" />
-        <sidebar-link
-          to="/table-list"
-          name="Table List"
-          icon="ti-view-list-alt"
-        />
-        <sidebar-link to="/typography" name="Typography" icon="ti-text" />
-        <sidebar-link to="/icons" name="Icons" icon="ti-pencil-alt2" />
-        <sidebar-link to="/maps" name="Map" icon="ti-map" />
-        <sidebar-link to="/notifications" name="Notifications" icon="ti-bell" />
+        <sidebar-link to="/dashboard/users" name="Usuarios" icon="ti-user" />
+        <sidebar-link to="/dashboard/routers" name="Rutas" icon="ti-view-list-alt" />
+        <sidebar-link to="/dashboard/vehicles" name="Vehiculos" icon="ti-view-list-alt" />
+        <sidebar-link to="/dashboard/reports" name="Reportes" icon="ti-view-list-alt" />
+        <sidebar-link to="/dashboard/dispatch_orders" name="Ordenes de Despacho" icon="ti-view-list-alt" />
+        <sidebar-link to="/dashboard/table-list" name="Table List" icon="ti-view-list-alt" />
+        <sidebar-link to="/dashboard/typography" name="Typography" icon="ti-text" />
+        <sidebar-link to="/dashboard/icons" name="Icons" icon="ti-pencil-alt2" />
+        <sidebar-link to="/dashboard/maps" name="Map" icon="ti-map" />
+        <sidebar-link to="/dashboard/notifications" name="Notifications" icon="ti-bell" />
       </template>
       <mobile-menu>
         <li class="nav-item">
@@ -21,12 +21,7 @@
             <p>Stats</p>
           </a>
         </li>
-        <drop-down
-          class="nav-item"
-          title="5 Notifications"
-          title-classes="nav-link"
-          icon="ti-bell"
-        >
+        <drop-down class="nav-item" title="5 Notifications" title-classes="nav-link" icon="ti-bell">
           <a class="dropdown-item">Notification 1</a>
           <a class="dropdown-item">Notification 2</a>
           <a class="dropdown-item">Notification 3</a>
@@ -71,5 +66,17 @@ export default {
       }
     },
   },
+  computed: {
+    isAuthenticated() {
+      let authenticated = localStorage.getItem("isAuthenticated") === "S";
+      if (authenticated) {
+        return true;
+      } else {
+        this.$router.push('/login')
+        return false;
+      }
+
+    }
+  }
 };
 </script>

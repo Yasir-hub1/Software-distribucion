@@ -11,14 +11,21 @@
     "dev": "npm run serve"
   },
   "dependencies": {
+    "axios": "^1.6.8",
     "bootstrap": "4.6.2",
+    "bootstrap-vue": "^2.21.2",
     "chartist": "0.11.0",
     "es6-promise": "4.2.8",
     "eslint-plugin-vue": "^9.8.0",
+    "jquery": "^3.7.1",
+    "popper.js": "^1.16.1",
     "vue": "2.7.14",
+    "vue-axios": "^3.5.2",
     "vue-clickaway": "2.2.2",
     "vue-notifyjs": "0.3.0",
-    "vue-router": "3.0.1"
+    "vue-router": "3.0.1",
+    "vue-toast-notification": "^1.0.1",
+    "vuex2": "^1.0.10"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "3.12.1",

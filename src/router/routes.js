@@ -1,21 +1,33 @@
 import DashboardLayout from "@/layout/dashboard/DashboardLayout.vue";
-// GeneralViews
 import NotFound from "@/pages/NotFoundPage.vue";
-
-// Admin pages
 import Dashboard from "@/pages/Dashboard.vue";
-import UserProfile from "@/pages/UserProfile.vue";
+import Users from "@/pages/Users.vue";
 import Notifications from "@/pages/Notifications.vue";
 import Icons from "@/pages/Icons.vue";
 import Maps from "@/pages/Maps.vue";
 import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
+import Login from "@/pages/Login.vue";
+import Routes from "../pages/Routes.vue";
+import Vehicles from "../pages/Vehicles.vue";
+import Reports from "../pages/Reports.vue";
+import Dispatch_orders from "../pages/Dispatch_orders.vue";
 
 const routes = [
   {
     path: "/",
+    component: Login, // Ruta inicial dirigida al componente Login
+    redirect: "/login",
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: Login,
+  },
+  {
+    path: "/dashboard",
     component: DashboardLayout,
-    redirect: "/dashboard",
+    redirect: "/dashboard/dashboard",
     children: [
       {
         path: "dashboard",
@@ -23,32 +35,52 @@ const routes = [
         component: Dashboard,
       },
       {
-        path: "stats",
-        name: "stats",
-        component: UserProfile,
+        path: "/dashboard/users",
+        name: "USUARIOS",
+        component: Users,
       },
       {
-        path: "notifications",
+        path: "/dashboard/routers",
+        name: "RUTAS",
+        component: Routes,
+      },
+      {
+        path: "/dashboard/vehicles",
+        name: "Vehiculos",
+        component: Vehicles,
+      },
+      {
+        path: "/dashboard/reports",
+        name: "Reportes",
+        component: Reports,
+      },
+      {
+        path: "/dashboard/dispatch_orders",
+        name: "Ordenes de Despaacho",
+        component: Dispatch_orders,
+      },
+      {
+        path: "/dashboard/notifications",
         name: "notifications",
         component: Notifications,
       },
       {
-        path: "icons",
+        path: "/dashboard/icons",
         name: "icons",
         component: Icons,
       },
       {
-        path: "maps",
+        path: "/dashboard/maps",
         name: "maps",
         component: Maps,
       },
       {
-        path: "typography",
+        path: "/dashboard/typography",
         name: "typography",
         component: Typography,
       },
       {
-        path: "table-list",
+        path: "/dashboard/table-list",
         name: "table-list",
         component: TableList,
       },
@@ -56,14 +88,5 @@ const routes = [
   },
   { path: "*", component: NotFound },
 ];
-
-/**
- * Asynchronously load view (Webpack Lazy loading compatible)
- * The specified component must be inside the Views folder
- * @param  {string} name  the filename (basename) of the view to load.
-function view(name) {
-   var res= require('../components/Dashboard/Views/' + name + '.vue');
-   return res;
-};**/
 
 export default routes;

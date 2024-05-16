@@ -14,12 +14,27 @@
 
  */
 import Vue from "vue";
+import BootstrapVue from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 import App from "./App";
 import router from "./router/index";
 
 import PaperDashboard from "./plugins/paperDashboard";
 import "vue-notifyjs/themes/default.css";
 
+import axios from "axios";
+import ToastPlugin from "vue-toast-notification";
+import "vue-toast-notification/dist/theme-bootstrap.css";
+
+axios.defaults.baseURL = "http://192.168.100.42:8000/api";
+
+let token = localStorage.getItem("token");
+
+if (token) axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+
+Vue.use(ToastPlugin);
+Vue.use(BootstrapVue);
 Vue.use(PaperDashboard);
 
 /* eslint-disable no-new */

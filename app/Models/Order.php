@@ -22,4 +22,10 @@ class Order extends Model
         return $this->hasMany(VehicleDriver::class);
     }
 
+     // relacion de un pedido tiene muchos orderDetalles
+     public function order_detail()
+     {
+         return $this->hasMany(OrderDetail::class);
+     }
+
 }

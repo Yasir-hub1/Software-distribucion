@@ -12,6 +12,10 @@ use Laravel\Sanctum\Sanctum;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use PHPUnit\Framework\Constraint\IsEmpty;
+
+use function PHPUnit\Framework\isEmpty;
+use function PHPUnit\Framework\isNull;
 
 class AuthController extends Controller
 {
@@ -21,21 +25,29 @@ class AuthController extends Controller
     public function loginAdmin(): JsonResponse
     {
         request()->validate([
-            "email" => "required|email",
+            "username" => "required",
             "password" => "required|min:8|max:20",
             "device_name" => "required"
 
         ]);
 
 
-        $admin = User::select(["id", "name", "password", "email"])
-            ->where("email", request("email"))
+        $admin = User::select(["id", "username", "password", "type_user"])
+            ->where("username", request("username"))
+            ->where("type_user", request("type_user"))
             ->first();
+
+        if (empty($admin)) {
+            return $this->error(
+                __("El usuario no existe"),
+
+            );
+        }
 
         /* Verificacion si el admin existe */
         if (!$admin || !Hash::check(request("password"), $admin->password)) {
             throw ValidationException::withMessages([
-                "email" => [__("Credenciales incorrectas")]
+                "name" => [__("Credenciales incorrectas")]
             ]);
         }
 
@@ -55,17 +67,24 @@ class AuthController extends Controller
     public function loginDriver(): JsonResponse
     {
         request()->validate([
-            "name" => "required",
+            "username" => "required",
             "password" => "required|min:8|max:20",
             "device_name" => "required"
 
         ]);
 
 
-        $driver = User::select(["id", "name", "password", "type_user"])
-            ->where("name", request("name"))
+        $driver = User::select(["id", "username", "password", "type_user"])
+            ->where("username", request("username"))
             ->where("type_user", "driver")
             ->first();
+
+        if (empty($driver)) {
+            return $this->error(
+                __("El usuario no existe"),
+
+            );
+        }
 
         /* Verificacion si el driver existe */
         if (!$driver || !Hash::check(request("password"), $driver->password)) {
@@ -91,22 +110,29 @@ class AuthController extends Controller
     public function loginCustomer(): JsonResponse
     {
         request()->validate([
-            "name" => "required",
+            "username" => "required",
             "password" => "required|min:8|max:20",
             "device_name" => "required"
 
         ]);
 
 
-        $customer = User::select(["id", "name", "password", "type_user"])
-            ->where("name", request("name"))
+        $customer = User::select(["id", "username", "password", "type_user"])
+            ->where("username", request("username"))
             ->where("type_user", "customer")
             ->first();
+
+        if (empty($customer)) {
+            return $this->error(
+                __("El usuario no existe"),
+
+            );
+        }
 
         /* Verificacion si el customer existe */
         if (!$customer || !Hash::check(request("password"), $customer->password)) {
             throw ValidationException::withMessages([
-                "name" => [__("Credenciales incorrectas")]
+                "username" => [__("Credenciales incorrectas")]
             ]);
         }
 
@@ -121,18 +147,41 @@ class AuthController extends Controller
             ]
         );
     }
+    //TODO: PARA EL REGISTRO DEL ADMIN
+    public function signupAdmin(): JsonResponse
+    {
+        request()->validate([
+            "username" => "required|min:2|max:60",
+            "password" => "required|min:8|max:20",
+        ]);
 
+        //: registrar el tipo de usuario
+        $admin = User::create([
+            "username" => request("username"),
+            "password" => bcrypt(request("password")),
+            "type_user" => "admin",
+            "created_at" => now(),
+        ]);
+
+        return $this->success(
+            __("Cuenta creada"),
+            [
+                "admin" => $admin->toArray(),
+
+            ]
+        );
+    }
 
     //TODO: PARA EL REGISTRO DEL CLIENTE
     public function signupCustomer(): JsonResponse
     {
         request()->validate([
-            "name" => "required|min:2|max:60",
+            "username" => "required|min:2|max:60",
             "password" => "required|min:8|max:20",
         ]);
         //: registrar datos del cliente
         Customer::create([
-            "name" => request("name"),
+            "name" => request("username"),
             "phone" => request("phone"),
             "email" => request("email"),
 
@@ -140,7 +189,7 @@ class AuthController extends Controller
         ]);
         //: registrar el tipo de usuario
         User::create([
-            "name" => request("name"),
+            "username" => request("username"),
             "password" => bcrypt(request("password")),
             "type_user" => "customer",
             "created_at" => now(),
@@ -156,29 +205,32 @@ class AuthController extends Controller
     public function signupDriver(): JsonResponse
     {
         request()->validate([
-            "name" => "required|min:2|max:60",
-            "password" => "required|min:8|max:20",
-
+            "username" => "required|min:2|max:60",
         ]);
+
+        //: registrar el tipo de usuario
+        $user = User::create([
+            "username" => request("username"),
+            "password" => bcrypt(request("ci")),
+            "type_user" => "driver",
+            "created_at" => now(),
+        ]);
+
+
         //: registrar datos del cliente
         Driver::create([
             "name" => request("name"),
             "ci" => request("ci"),
             "phone" => request("phone"),
             "address" => request("address"),
-            "email" => request("email"),
+
             // "photo" => request("photo"),
-
+            "id_cities" => request("id_cities"),
+            "id_user" => $user->id,
 
         ]);
-        //: registrar el tipo de usuario
-        User::create([
-            "name" => request("name"),
-            "password" => bcrypt(request("password")),
-            "type_user" => "driver",
-            "created_at" => now(),
-        ]);
 
+         $user->save();
         return $this->success(
             __("Cuenta creada")
         );

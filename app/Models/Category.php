@@ -12,4 +12,10 @@ class Category extends Model
         'name',
 
     ];
+
+    // relacion de una ciudad a muchos coductores
+    public function product()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

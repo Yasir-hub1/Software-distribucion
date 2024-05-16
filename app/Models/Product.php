@@ -15,4 +15,10 @@ class Product extends Model
         'price',
         'date'
     ];
+
+      // relacion de una ciudad a muchos vehiculos
+      public function category()
+      {
+          return $this->belongsTo(Category::class,'id_category');
+      }
 }

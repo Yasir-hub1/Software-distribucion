@@ -13,4 +13,10 @@ class TokenNotifications extends Model
         'device',
 
     ];
+
+      // relacion de un conductor tiene muchos token
+      public function driver()
+      {
+          return $this->belongsTo(Driver::class,'id_driver');
+      }
 }

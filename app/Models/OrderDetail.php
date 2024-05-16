@@ -15,4 +15,10 @@ class OrderDetail extends Model
         'destination',
         'total'
     ];
+
+     // relacion de una ciudad a muchos vehiculos
+     public function order()
+     {
+         return $this->belongsTo(Order::class,'id_order');
+     }
 }

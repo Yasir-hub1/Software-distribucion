@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Address;
+use App\Models\Customer;
 
 class AddressController extends Controller
 {
@@ -42,36 +43,47 @@ class AddressController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Address  $address
+     * @param  \App\Models\Customer  $address
      * @return \Illuminate\Http\Response
      */
-    public function show(Address $address)
+    public function showAddressByCustomer($id_customer)
     {
-        //
+        $address = Address::where('id_customer', $id_customer)->get();
+        return $this->success(
+
+            [
+                "address" => $address->toArray(),
+
+            ]
+        );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Address  $address
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Address $address)
+
+
+
+    public function update(Request $request, $id_customer)
     {
-        //
+        try {
+
+
+            // Obtener todas las direcciones asociadas al cliente
+            $address = Address::where('customer_id', $id_customer)->get();
+
+
+            // Actualizar los datos de cada dirección asociada
+            // foreach ($address as $address) {
+                $address->update($request->all());
+            // }
+                
+            return $this->success(
+                ' direcciones actualizados correctamente',
+                ["address" => $address]
+            );
+        } catch (\Throwable $th) {
+            return $this->error('No se pudieron actualizar los datos.', $th);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Address  $address
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Address $address)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -81,6 +93,10 @@ class AddressController extends Controller
      */
     public function destroy(Address $address)
     {
-        //
+        $address->delete();
+        return $this->success(
+            ' direcciones eliminados correctamente',
+            ["address" => $address]
+        );
     }
 }

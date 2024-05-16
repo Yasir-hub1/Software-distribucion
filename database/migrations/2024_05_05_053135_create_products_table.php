@@ -20,6 +20,11 @@ class CreateProductsTable extends Migration
             $table->string('price')->nullable();
             $table->dateTime('date')->nullable();
 
+            $table->foreignId('id_category')
+            ->nullable()
+            ->constrained('categories')
+            ->cascadeOnUpdate()/* actualizacion en cascada */
+            ->nullOnDelete(); /* y cuando se elimine quede en null */
             $table->timestamps();
         });
     }

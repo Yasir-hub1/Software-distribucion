@@ -24,6 +24,14 @@ class CreateCustomersTable extends Migration
             ->constrained('cities')
             ->cascadeOnUpdate()/* actualizacion en cascada */
             ->nullOnDelete(); /* y cuando se elimine quede en null */
+
+            $table->foreignId('id_user')
+            ->nullable()
+            ->constrained('users')
+            ->cascadeOnUpdate()/* actualizacion en cascada */
+            ->nullOnDelete(); /* y cuando se elimine quede en null */
+
+            
             $table->timestamps();
         });
     }

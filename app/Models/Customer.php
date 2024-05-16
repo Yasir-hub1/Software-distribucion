@@ -17,6 +17,11 @@ class Customer extends Model
      // relacion de una ciudad a muchos Clientes
      public function city()
      {
-         return $this->belongsTo(City::class);
+         return $this->belongsTo(City::class,'id_cities');
      }
+
+     public function user()
+    {
+        return $this->belongsTo(User::class,'id_user');
+    }
 }

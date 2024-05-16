@@ -15,6 +15,20 @@ class CreateTokenNotificationsTable extends Migration
     {
         Schema::create('token_notifications', function (Blueprint $table) {
             $table->id();
+            $table->string('token')->nullable();
+            $table->string('device')->nullable();
+            $table->foreignId('id_driver')
+            ->nullable()
+            ->constrained('drivers')
+            ->cascadeOnUpdate()/* actualizacion en cascada */
+            ->nullOnDelete(); /* y cuando se elimine quede en null */
+
+            $table->foreignId('id_customer')
+            ->nullable()
+            ->constrained('customers')
+            ->cascadeOnUpdate()/* actualizacion en cascada */
+            ->nullOnDelete(); /* y cuando se elimine quede en null */
+
             $table->timestamps();
         });
     }

@@ -9,16 +9,21 @@ class Driver extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',//placa
+        'name',
         'ci',
-        'phone',//marca
+        'phone',
         'address',
         'photo'
     ];
      // relacion de una ciudad a muchos vehiculos
     public function city()
     {
-        return $this->belongsTo(City::class);
+        return $this->belongsTo(City::class,'id_cities');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'id_user');
     }
 
     // relacion de un conductor a muchos tokens notificaciones

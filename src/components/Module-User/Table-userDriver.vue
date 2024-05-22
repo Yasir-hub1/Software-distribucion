@@ -37,99 +37,51 @@
       </template>
 
 
-      <template v-if="stateForm === 1">
-        <div class="container mt-3">
-          <card title="Agregar Datos">
-            <div slot="raw-content">
+      <form class="row g-3">
+          <template v-if="stateForm === 2">
+            <div class="container mt-3">
+              <card title="Actualizar Datos">
               <form @submit.prevent="send_form_data">
-                <div class="form-group">
-                  <label for="name">Nombre</label>
-                  <input type="text" class="form-control" id="name" v-model="formData.name" required>
-                </div>
-                <div class="form-group">
-                  <label for="username">Nombre de Usuario</label>
-                  <input type="text" class="form-control" id="username" v-model="formData.username" required>
-                </div>
 
-                <div class="form-group">
-                  <label for="ci">CI</label>
-                  <input type="text" class="form-control" id="ci" v-model="formData.ci" required>
-                </div>
-                <div class="form-group">
-                  <label for="phone">Teléfono</label>
-                  <input type="text" class="form-control" id="phone" v-model="formData.phone" required>
-                </div>
-                <div class="form-group">
-                  <label for="address">Dirección</label>
-                  <input type="text" class="form-control" id="address" v-model="formData.address" required>
-                </div>
+                <div class="col-12">
+                    <label for="name" class="form-label"> Nombre: </label>
+                    <input type="text" class="form-control" id="name" v-model="formData.name" required placeholder="Ana">
+                  </div>
+                  <div class="col-12">
+                    <label for="username" class="form-label"> Nombre de usuario: </label>
+                    <input type="text" class="form-control" id="username" v-model="formData.username.username" required placeholder="nombre de usuario">
+                  </div>
+                  <div class="col-12">
+                    <label for="ci" class="form-label"> Carnet de identidad: </label>
+                    <input type="text" class="form-control" id="ci" v-model="formData.ci" required placeholder="ci">
+                  </div>
+                  <div class="col-12">
+                    <label for="phone" class="form-label"> Teléfono: </label>
+                    <input type="text" class="form-control" id="phone" v-model="formData.phone" required placeholder="123456">
+                  </div>
+                  <div class="col-12">
+                    <label for="address" class="form-label"> Dirección: </label>
+                    <input type="text" class="form-control" id="address"  v-model="formData.address"  required placeholder="Avenida Busch">
+                  </div>
 
-                <div class="col-md-3">
-                  <div class="dropdown bootstrap-select show">
-                    <label for="address">Ciudad</label>
-                    <select data-size="7" class="selectpicker" data-style="btn btn-primary btn-round"
-                      title="Seleccione Ciudad" tabindex="-98" v-model="formData.city_id">
-                      <option v-for="city in array_city" :key="city.id" :value="city.id" v-text="city.name"></option>
+                 <div class="form-group row">
+                  <label for="city_id" class="col-12"> Ciudad:</label>
+                  <div class="col-sm-9">
+                    <select id="city_id" class="form-control" v-model="formData.city_id" required>
+                      <option value="" disabled> Seleccione Ciudad</option>
+                      <option v-for="city in array_city" :key="city.id" :value="city.id">{{ city.name }}</option>
                     </select>
-
                   </div>
                 </div>
+                                    
+                  <button type="submit" class="btn btn-success">Guardar</button>
+                  <button type="button" class="btn btn-secondary">Cancelar</button>
 
-
-                <button type="submit" class="btn btn-primary">Guardar</button>
-              </form>
+                </form>
+              </card>
             </div>
-          </card>
-        </div>
-      </template>
-
-
-
-      <template v-if="stateForm === 2">
-        <div class="container mt-3">
-          <card title="Actualizar Datos">
-            <div slot="raw-content">
-              <form @submit.prevent="send_form_data">
-                <div class="form-group">
-                  <label for="name">Nombre</label>
-                  <input type="text" class="form-control" id="name" v-model="formData.name" required>
-                </div>
-                <div class="form-group">
-                  <label for="username">Nombre de Usuario</label>
-                  <input type="text" class="form-control" id="username" v-model="formData.username.username" required>
-                </div>
-
-                <div class="form-group">
-                  <label for="ci">CI</label>
-                  <input type="text" class="form-control" id="ci" v-model="formData.ci" required>
-                </div>
-                <div class="form-group">
-                  <label for="phone">Teléfono</label>
-                  <input type="text" class="form-control" id="phone" v-model="formData.phone" required>
-                </div>
-                <div class="form-group">
-                  <label for="address">Dirección</label>
-                  <input type="text" class="form-control" id="address" v-model="formData.address" required>
-                </div>
-
-                <div class="col-md-3">
-                  <div class="dropdown bootstrap-select show">
-                    <label for="address">Ciudad</label>
-                    <select data-size="7" class="selectpicker" data-style="btn btn-primary btn-round"
-                      title="Seleccione Ciudad" tabindex="-98" v-model="formData.city_id">
-                      <option v-for="city in array_city" :key="city.id" :value="city.id" v-text="city.name"></option>
-                    </select>
-
-                  </div>
-                </div>
-
-
-                <button type="submit" class="btn btn-primary">Guardar</button>
-              </form>
-            </div>
-          </card>
-        </div>
-      </template>
+          </template>
+      </form>
     </div>
   </div>
 </template>
@@ -228,7 +180,7 @@ export default {
 
             id_cities: this.formData.city_id,
 
-          })
+          });
         this.$toast.success(res.data.message);
         this.getDriver();
         this.stateForm=0;
@@ -253,6 +205,7 @@ export default {
         this.$toast.success(res.data.message);
         this.getDriver();
         this.stateForm=0;
+
       } catch (error) {
         this.$toast.error(error.message);
       }

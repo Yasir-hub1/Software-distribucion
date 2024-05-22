@@ -27,7 +27,7 @@ import axios from "axios";
 import ToastPlugin from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-bootstrap.css";
 
-axios.defaults.baseURL = "http://192.168.100.42:8000/api";
+axios.defaults.baseURL = "http://192.168.0.8:8000/api";
 
 let token = localStorage.getItem("token");
 

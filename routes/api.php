@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CityController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\DriverController;
+use APP\Http\Controllers\Api\VehicleController;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -67,15 +68,18 @@ Route::group(['middleware' => ["auth:sanctum"]], function () {
         Route::post("/update-address/{id_customer}", [AddressController::class, "update"]);
         Route::get("/delete-address/{id_customer}", [AddressController::class, "destroy"]);
 
+        //CRUD DE VEHÍCULOS
+        Route::get("/show-vehicle", [VehicleController::class, "show"]);
+        Route::post("/store-vehicle", [VehicleController::class, "store"]);  
+        Route::post("/update-vehicle/{vehicle}", [VehicleController::class, "update"]);
+        Route::get("/delete-vehicle/{vehicle}", [VehicleController::class, "destroy"]); 
+
 
     });
-
 
 
     Route::prefix('driver')->group(function () {
     });
-
-
 
 
     Route::prefix('customer')->group(function () {

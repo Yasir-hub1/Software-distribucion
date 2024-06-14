@@ -218,7 +218,7 @@ class AuthController extends Controller
 
 
         //: registrar datos del cliente
-        Driver::create([
+        /*Driver::create([
             "name" => request("name"),
             "ci" => request("ci"),
             "phone" => request("phone"),
@@ -228,12 +228,23 @@ class AuthController extends Controller
             "id_cities" => request("id_cities"),
             "id_user" => $user->id,
 
-        ]);
+        ]);*/
+        $driver = new Driver();
 
-         $user->save();
+        $driver->name = request("name");
+        $driver->ci = request("ci");
+        $driver->phone = request("phone");
+        $driver->address = request("address");
+        $driver->id_cities = request("id_cities");
+        $driver->id_user = $user->id;
+        $user->save();
+        $driver->save();
+
         return $this->success(
             __("Cuenta creada")
         );
+
+        // $driver = 
     }
 
 

@@ -13,12 +13,19 @@ class OrderDetail extends Model
         'unit_price',
         'oigin',
         'destination',
-        'total'
+        'total',
+        'product_id',
+        'order_id'
     ];
 
-     // relacion de una ciudad a muchos vehiculos
+     // relacion de una ciudad a muchos ordenes
      public function order()
      {
-         return $this->belongsTo(Order::class,'id_order');
+         return $this->belongsTo(Order::class,'order_id');
+     }
+
+     public function product()
+     {
+        return $this->belongsTo(Product::class,'product_id');
      }
 }

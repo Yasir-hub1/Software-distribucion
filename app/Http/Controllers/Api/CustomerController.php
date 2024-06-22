@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Address;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CustomerController extends Controller
 {
@@ -84,17 +85,17 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    // CustomerController.php
+    public function show()
     {
-        $customers = $customer::with('city')->get();
-        return $this->success(
-            __("Lista de clientes"),
-            [
-                "customers" => $customers->toArray(),
-
-            ]
-        );
+        try {
+            $customers = Customer::with('city')->get();
+            return response()->json(['customers' => $customers]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error fetching customers', 'message' => $e->getMessage()], 500);
+        }
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -103,16 +104,28 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(Request $request, Customer $customer)
-    {
-        try {
+     public function update(Request $request, Customer $customer)
+     {
+         try {
+            $customer->nombre=$request->nombre;
+            $customer->phone=$request->phone;
+            $customer->email=$request->email;
+            $customer->id_cities=$request->id_cities;
+            $customer->id_user=$request->id_user;
+            $customer->update();
 
-            $customer->update($request->all());
-            return $this->success('Datos del cliente  actualizados', ["customer" => $customer]);
-        } catch (\Throwable $th) {
-            return $this->error('No se pudieron actualizar los datos.', $th);
-        }
-    }
+             return response()->json([
+                 'message' => 'Datos del cliente actualizados',
+                 'customer' => $customer
+             ]);
+         } catch (\Throwable $th) {
+             return response()->json([
+                 'message' => 'No se pudieron actualizar los datos.',
+                 'error' => $th->getMessage()
+             ], 500); // Puedes ajustar el código de estado HTTP según sea necesario
+         }
+     }
+     
 
     /**
      * Remove the specified resource from storage.
@@ -122,6 +135,7 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
+        dd($customer);
         $customer->delete();
         return $this->success(
             __("Se eliminó correctamente"),

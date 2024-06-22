@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
-use App\Models\Vehicle;
 use Illuminate\Http\Request;
+use App\Models\Vehicle;
 
 class VehicleController extends Controller
 {
@@ -27,7 +27,7 @@ class VehicleController extends Controller
         //
     }
 
-    /**
+     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -35,35 +35,37 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
-        ////Para validar la solicitud
+        // Validar la solicitud
         $request->validate([
-            'plate'=> 'required|string',
-            'model'=> 'required|string',
-            'brand'=> 'required|string',
-            'ability'=> 'required|string',
-            'photo'=> 'required|string',
-            'state'=> 'required|string'
+            'plate' => 'required|string',
+            'model' => 'required|string',
+            'brand' => 'required|string',
+            'ability' => 'required|string',
+            'photo' => 'required|string',
+            'state' => 'required|string'
         ]);
 
         try {
             $vehicle = new Vehicle([
-                'plate' => $request('plate'),
-                'model' => $request('model'),
-                'brand' => $request('brand'),
-                'ability' => $request('ability'),
-                'photo' => $request('photo'),
-                'state' => $request('state'),
+                'plate' => $request->input('plate'),
+                'model' => $request->input('model'),
+                'brand' => $request->input('brand'),
+                'ability' => $request->input('ability'),
+                'photo' => $request->input('photo'),
+                'state' => $request->input('state'),
             ]);
 
             $vehicle->save();
-            return $this->success(
-                __("Se regístro correctamente"),
-                [
-                    "vehicle" => $vehicle->toArray(),
-                ]
-            );
+
+            return response()->json([
+                'message' => 'Se registró correctamente',
+                'vehicle' => $vehicle->toArray(),
+            ]);
         } catch (\Throwable $th) {
-            return $this->error('No se pudiern crear los datos del vehículo.', $th);
+            return response()->json([
+                'message' => 'No se pudo crear el vehículo',
+                'error' => $th->getMessage(),
+            ], 500);
         }
     }
 
@@ -73,17 +75,10 @@ class VehicleController extends Controller
      * @param  \App\Models\Vehicle  $vehicle
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show(Vehicle $vehicle)
     {
         // Obtener todos los vehículos registrados
-        $vehicles = Vehicle::all();
-    
-        // Verificar si hay vehículos
-        if ($vehicles->isEmpty()) {
-            return $this->error("No hay vehículos registrados.", 404);
-        }
-    
-        return $this->success("Lista de vehículos registrados", ["vehicles" => $vehicles->toArray()]);
+        return $vehicle::all();
     }
     
 
@@ -108,12 +103,24 @@ class VehicleController extends Controller
     public function update(Request $request, Vehicle $vehicle)
     {
         try {
-            $vehicle->update($request->all());
-            return $this->success('Datos del cliente  actualizados', ["vehicle" => $vehicle]);
-            
-        } catch (\Throwable $th) {
-            return $this->error('No se pudieron actualizar los datos de los vehículos.', $th);
-        }
+            $vehicle->plate=$request->plate;
+            $vehicle->model=$request->model;
+            $vehicle->brand=$request->brand;
+            $vehicle->ability=$request->ability;
+            $vehicle->photo =$request->photo;
+            $vehicle->state =$request->state;
+            $vehicle->update();
+
+             return response()->json([
+                 'message' => 'Datos del cliente actualizados',
+                 'vehicle' => $vehicle
+             ]);
+         } catch (\Throwable $th) {
+             return response()->json([
+                 'message' => 'No se pudieron actualizar los datos.',
+                 'error' => $th->getMessage()
+             ], 500); // Puedes ajustar el código de estado HTTP según sea necesario
+         }
     }
 
     /**

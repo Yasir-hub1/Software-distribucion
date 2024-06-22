@@ -11,12 +11,12 @@ class Product extends Model
     protected $fillable = [
         'code',
         'name',
-        // 'ability',// capacidad
         'price',
-        'date'
+        'date',
+        'id_category'
     ];
 
-      // relacion de una ciudad a muchos vehiculos
+      // relacion de una ciudad a muchas categorias
       public function category()
       {
           return $this->belongsTo(Category::class,'id_category');

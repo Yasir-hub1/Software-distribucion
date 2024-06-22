@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\DeliveryController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderDetailController;
 use Illuminate\Support\Facades\Route;
@@ -88,12 +89,15 @@ Route::get("/show-order", [OrderController::class, "show"]);
 Route::post("/store-order", [OrderController::class, "store"]);
 Route::post("/update-order/{id}", [OrderController::class, "update"]);
 Route::get("/delete-order/{id}", [OrderController::class, "destroy"]);
+Route::post('orders/{order}/assign-driver-vehicle', [OrderController::class, 'assignDriverAndVehicle']);
 
 //para los detalles
-Route::post('/show-orders-details', [OrderDetailController::class, 'store']);
+Route::post('/store-orders-details', [OrderDetailController::class, 'store']);
 Route::get("/show-orders-details/{orderDetail}", [ProductController::class, "show"]);
 
-Route::post('orders/{order}/assign-driver-vehicle', [OrderController::class, 'assignDriverAndVehicle']);
+
+Route::post('delivery/{order}/register-delivery', [DeliveryController::class, 'registerDelivery']);
+
 
 /*Route::group(['middleware' => ["auth:sanctum"]], function () {
 

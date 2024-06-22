@@ -144,7 +144,7 @@ class OrderController extends Controller
     }
 
     //para la asiganacion de vehiculo y chofer
-/**
+    /**
      * Asignar chofer y vehículo disponible a una orden y registrar en la tabla intermedia.
      *
      * @param  \Illuminate\Http\Request  $request

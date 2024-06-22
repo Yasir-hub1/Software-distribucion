@@ -41,7 +41,7 @@ class OrderDetailController extends Controller
         $request->validate([
             'count' => 'required|integer',
             'unit_price' => 'required|string',   
-            'origin' => 'required|string',
+            'oigin' => 'required|string',
             'destination' => 'required|string', 
             'total' => 'required|string', 
             'product_id' => 'required|integer',
@@ -53,7 +53,7 @@ class OrderDetailController extends Controller
             $orderDetail = new OrderDetail([
                 'count' => $request->count,
                 'unit_price' => $request->unit_price,
-                'origin' => $request->origin,
+                'oigin' => $request->oigin,
                 'destination' => $request->destination,
                 'total' => $request->total,
                 'product_id' => $request->product_id,

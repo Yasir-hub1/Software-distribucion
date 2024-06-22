@@ -9,6 +9,8 @@ class VehicleDriver extends Model
 {
     use HasFactory;
 
+    protected $table = 'vehicle_driver'; 
+
     protected $fillable = [
         'order_id',
         'vehicle_id',
@@ -21,5 +23,15 @@ class VehicleDriver extends Model
     public function order()
     {
         return $this->belongsTo(Order::class,'order_id');
+    }
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class, 'vehicle_id');
+    }
+
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class, 'driver_id');
     }
 }

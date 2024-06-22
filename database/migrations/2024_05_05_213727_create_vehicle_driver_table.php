@@ -15,7 +15,7 @@ class CreateVehicleDriverTable extends Migration
     {
         Schema::create('vehicle_driver', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('date_assigment');
+            $table->dateTime('date_assigment')->default(now()); 
             $table->dateTime('date_deallocation')->nullable();
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('vehicle_id');

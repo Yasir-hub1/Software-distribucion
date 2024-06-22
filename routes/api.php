@@ -93,6 +93,8 @@ Route::get("/delete-order/{id}", [OrderController::class, "destroy"]);
 Route::post('/show-orders-details', [OrderDetailController::class, 'store']);
 Route::get("/show-orders-details/{orderDetail}", [ProductController::class, "show"]);
 
+Route::post('orders/{order}/assign-driver-vehicle', [OrderController::class, 'assignDriverAndVehicle']);
+
 /*Route::group(['middleware' => ["auth:sanctum"]], function () {
 
     Route::prefix('admin')->group(function () {

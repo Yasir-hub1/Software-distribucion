@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\OrderDetail;
+use App\Models\Vehicle;
+use App\Models\Driver;
+use App\Models\VehicleDriver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -142,4 +144,52 @@ class OrderController extends Controller
     }
 
     //para la asiganacion de vehiculo y chofer
+/**
+     * Asignar chofer y vehículo disponible a una orden y registrar en la tabla intermedia.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Order  $order
+     * @return \Illuminate\Http\Response
+     */
+    public function assignDriverAndVehicle(Request $request, Order $order)
+    {
+        // Validar la solicitud
+        $request->validate([
+            'vehicle_id' => 'required|exists:vehicles,id',
+            'driver_id' => 'required|exists:drivers,id',
+        ]);
+
+        try {
+            // Obtener el vehículo y verificar si está disponible
+            $vehicle = Vehicle::findOrFail($request->vehicle_id);
+
+            if ($vehicle->state !== 'disponible') {
+                return response()->json([
+                    'error' => 'El vehículo seleccionado no está disponible para asignación'
+                ], 400);
+            }
+
+            // Obtener el chofer
+            $driver = Driver::findOrFail($request->driver_id);
+
+            // Crear una entrada en la tabla intermedia vehicle_driver
+            $assignment = VehicleDriver::create([
+                'order_id' => $order->id,
+                'vehicle_id' => $vehicle->id,
+                'driver_id' => $driver->id,
+                'date_assignment' => now(), // Fecha de asignación
+            ]);
+
+            return response()->json([
+                'message' => 'Chofer y vehículo asignados correctamente a la orden',
+                'assignment' => $assignment,
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => 'Error al asignar chofer y vehículo a la orden',
+                'details' => $th->getMessage()
+            ], 500);
+        }
+    }
 }

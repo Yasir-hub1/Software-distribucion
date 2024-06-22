@@ -19,10 +19,10 @@ class DeliveryController extends Controller
     public function registerDelivery(Request $request, Order $order)
     {
         // Verifica los datos recibidos
-        dd($request->all());
+        //dd($request->all());
 
         // Validar la solicitud
-        $request->validate([
+        /* $request->validate([
             'order_id' => 'required|exists:orders,id',
             'date' => 'required|string',
             'num_order' => 'required|string',
@@ -30,7 +30,7 @@ class DeliveryController extends Controller
             'latitude' => 'required|string',
             'longitude' => 'required|string',
             'description' => 'required|string'
-        ]);
+        ]); */
 
         try {
             // Verificar si el ID de la orden coincide con el ID de la orden en el request

@@ -15,6 +15,19 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return response()->json($category::all());
+        try {
+            // Obtener todos los productos con sus categorías
+            $categories = $category::all();
+
+            return response()->json([
+                'message' => 'Categorias',
+                'categories' => $categories
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'No se pudieron listar los datos.',
+                'error' => $th->getMessage()
+            ], 500);
+        }
     }
 }

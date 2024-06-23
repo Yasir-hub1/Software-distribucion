@@ -78,7 +78,20 @@ class VehicleController extends Controller
     public function show(Vehicle $vehicle)
     {
         // Obtener todos los vehículos registrados
-        return $vehicle::all();
+        try {
+            // Obtener todos los productos con sus categorías
+            $vehicles = $vehicle::all();
+
+            return response()->json([
+                'message' => 'Lista de vehiculos',
+                'vehicles' => $vehicles
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'No se pudieron listar los datos.',
+                'error' => $th->getMessage()
+            ], 500);
+        }
     }
     
 

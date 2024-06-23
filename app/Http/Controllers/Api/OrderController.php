@@ -76,7 +76,20 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-       return $order::all();
+        try {
+            // Obtener todos los productos con sus categorías
+            $orders = $order::all();
+
+            return response()->json([
+                'message' => 'Lista de ordenes',
+                'orders' => $orders
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'No se pudieron listar los datos.',
+                'error' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**

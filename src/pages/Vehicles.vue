@@ -19,7 +19,10 @@
                     <td>{{ item.model }}</td>
                     <td>{{ item.brand }}</td>
                     <td>{{ item.ability }}</td>
-                    <td>{{ item.photo }}</td>
+                   <!--  <td>
+                      <img :src="item.photo" alt="Foto del vehículo" v-if="item.photo" style="width: 50px; height: auto;">
+                    </td> -->
+                  <!--   <td>{{ item.photo }}</td> -->
                     <td>{{ item.state }}</td>
                     <td>
                       <button class="btn btn-outline-warning" type="button" @click="edit(item)">Editar</button>
@@ -54,10 +57,11 @@
                   <label for="ability" class="form-label">Capacidad:</label>
                   <input type="text" class="form-control" id="ability" v-model="formData.ability" required placeholder="123456">
                 </div>
-                <div class="col-12">
+               <!--  <div class="col-12">
                   <label for="photo" class="form-label">Foto:</label>
-                  <input type="text" class="form-control" id="photo" v-model="formData.photo">
-                </div>
+                  <input type="file" class="form-control" id="photo" @change="handleFileUpload">
+                </div> -->
+
                 <div class="col-12">
                   <label for="state" class="form-label">Estado:</label>
                   <select class="form-control" id="state" v-model="formData.state" required>
@@ -82,7 +86,7 @@
 import { PaperTable } from "@/components";
 import axios from "axios";
 
-const tableColumns = ["#", "Nro de Placa", "Modelo", "Marca", "Capacidad", "Foto", "Estado", "Opciones"];
+const tableColumns = ["#", "Nro de Placa", "Modelo", "Marca", "Capacidad", "Estado", "Opciones"];
 
 export default {
   name: "Table-userDriver",
@@ -112,7 +116,7 @@ export default {
         model: "",
         brand: "",
         ability: "",
-        photo: "",
+        //photo: null,
         state: "",
       }
     };
@@ -143,14 +147,20 @@ export default {
     },
     async store_vehicle() {
       try {
-        let res = await axios.post("/store-vehicles", {
-          plate: this.formData.plate,
-          model: this.formData.model,
-          brand: this.formData.brand,
-          ability: this.formData.ability,
-          photo: this.formData.photo,
-          state: this.formData.state,
+        let formData = new FormData();
+        formData.append('plate', this.formData.plate);
+        formData.append('model', this.formData.model);
+        formData.append('brand', this.formData.brand);
+        formData.append('ability', this.formData.ability);
+        //formData.append('photo', this.formData.photo);
+        formData.append('state', this.formData.state);
+
+        let res = await axios.post("/store-vehicles", formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         });
+
         this.$toast.success(res.data.message);
         this.getVehicle();
         this.stateForm = 0;
@@ -158,6 +168,7 @@ export default {
         this.$toast.error(error.message);
       }
     },
+
     async update_vehicle() {
       try {
         let res = await axios.post(`/update-vehicles/${this.formData.id}`, {
@@ -165,7 +176,7 @@ export default {
           model: this.formData.model,
           brand: this.formData.brand,
           ability: this.formData.ability,
-          photo: this.formData.photo,
+          //photo: this.formData.photo,
           state: this.formData.state,
         });
         this.$toast.success(res.data.message);
@@ -183,6 +194,11 @@ export default {
         this.update_vehicle();
       }
     },
+
+    handleFileUpload(event) {
+      this.formData.photo = event.target.files[0];
+    },
+
     openForm(model, action, data = []) {
       console.log("Datos para editar ", data)
       switch (model) {
@@ -195,7 +211,7 @@ export default {
                 model: "",
                 brand: "",
                 ability: "",
-                photo: "",
+               // photo: null,
                 state: "",
               };
               break;

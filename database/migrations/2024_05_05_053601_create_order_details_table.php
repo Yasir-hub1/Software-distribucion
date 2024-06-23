@@ -17,8 +17,6 @@ class CreateOrderDetailsTable extends Migration
             $table->id();
             $table->integer('count')->nullable();
             $table->string('unit_price')->nullable();
-            $table->string('oigin')->nullable();
-            $table->string('destination')->nullable();
             $table->string('total')->nullable();
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

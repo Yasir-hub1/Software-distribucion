@@ -44,6 +44,8 @@ class OrderController extends Controller
             'date' => 'required|string',
             'state' => 'required|string',
             'total' => 'required|string',
+            'latitud' => 'required|string',
+            'longitud' => 'required|string',
             'customer_id' => 'required|integer',
         ]);
 
@@ -53,6 +55,8 @@ class OrderController extends Controller
                 'date' => $request->date,
                 'state' => $request->state,
                 'total' => $request->total,
+                'latitud' => $request->latitud,
+                'longitud' => $request->longitud,
                 'customer_id' => $request->customer_id,
             ]);
              $order->save();
@@ -116,13 +120,15 @@ class OrderController extends Controller
             'date' => 'required|string',
             'state' => 'required|string',
             'total' => 'required|string',
+            'latitud' => 'required|string',
+            'longitud' => 'required|string',
             'customer_id' => 'required|integer',
         ]);
 
         
         try {
             $order = Order::findOrFail($id);  // Buscar la orden
-            $order->update($request->only(['date', 'state', 'total','customer_id'])); // Actualizar la orden
+            $order->update($request->only(['date', 'state', 'total','latitud','longitud','customer_id'])); // Actualizar la orden
 
         // Retornar una respuesta con el producto actualizado
         return response()->json([

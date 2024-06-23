@@ -27,8 +27,7 @@ class DeliveryController extends Controller
             'date' => 'required|string',
             'num_order' => 'required|string',
             'state' => 'required|string',
-            'latitude' => 'required|string',
-            'longitude' => 'required|string',
+            'destino' => 'required|string',
             'description' => 'required|string'
         ]); */
 
@@ -40,8 +39,7 @@ class DeliveryController extends Controller
                     'date' => $request->date, // Fecha de asignación
                     'num_order' => $request->num_order,
                     'state' => $request->state,
-                    'latitude' => $request->latitude,
-                    'longitude' => $request->longitude,
+                    'destino' => $request->destino,
                     'description' => $request->description,
                     'order_id' => $order->id
                 ]);

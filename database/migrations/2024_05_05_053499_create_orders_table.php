@@ -18,6 +18,8 @@ class CreateOrdersTable extends Migration
             $table->dateTime('date')->nullable();
             $table->string('state')->nullable();
             $table->string('total')->nullable();
+            $table->string('latitud')->nullable();
+            $table->string('longitud')->nullable();
             $table->unsignedBigInteger('customer_id');
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->timestamps();

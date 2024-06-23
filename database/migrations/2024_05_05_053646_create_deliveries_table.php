@@ -18,8 +18,7 @@ class CreateDeliveriesTable extends Migration
             $table->dateTime('date')->nullable();
             $table->string('num_order')->nullable();
             $table->string('state')->default('pendiente')->nullable();
-            $table->string('latitude')->nullable();
-            $table->string('logitude')->nullable();
+            $table->string('destino')->nullable();
             $table->string('description')->nullable();
 
             // Definir la clave foránea

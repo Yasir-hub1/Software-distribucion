@@ -44,7 +44,11 @@ class VehicleController extends Controller
             'photo' => 'required|string',
             'state' => 'required|string'
         ]);
-
+    
+        /*    $photoPath = null;
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('images', 'public');
+            } */
         try {
             $vehicle = new Vehicle([
                 'plate' => $request->input('plate'),
@@ -54,9 +58,9 @@ class VehicleController extends Controller
                 'photo' => $request->input('photo'),
                 'state' => $request->input('state'),
             ]);
-
+    
             $vehicle->save();
-
+    
             return response()->json([
                 'message' => 'Se registró correctamente',
                 'vehicle' => $vehicle->toArray(),
@@ -68,7 +72,8 @@ class VehicleController extends Controller
             ], 500);
         }
     }
-
+    
+    
     /**
      * Display the specified resource.
      *
@@ -81,6 +86,10 @@ class VehicleController extends Controller
         try {
             // Obtener todos los productos con sus categorías
             $vehicles = $vehicle::all();
+
+           /*  $vehicles->each(function($vehicle) {
+                $vehicle->photo = $vehicle->photo ? asset('storage/' . $vehicle->photo) : null;
+            }); */
 
             return response()->json([
                 'message' => 'Lista de vehiculos',

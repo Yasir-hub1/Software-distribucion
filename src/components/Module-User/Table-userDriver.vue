@@ -92,7 +92,7 @@ import toast from "vue-toast-notification";
 const tableColumns = ["#", "name", "CI", "phone", "Direccion", "Foto", "Ciudad", "Opciones"];
 
 export default {
-  name: "Table-userDriver",
+ // name: "Table-userDriver",
   props: {
     type: {
       type: String, // striped | hover
@@ -140,9 +140,9 @@ export default {
   methods: {
     async getDriver() {
       try {
-        let resp = await axios.get("/admin/show-drivers");
+        let resp = await axios.get("/show-drivers");
         this.drivers = resp.data.data.drivers;
-        console.log("datos para citeis ", resp.data)
+        //console.log("datos para citeis ", resp.data)
         this.$toast.success(resp.data.message);
       } catch (error) {
         this.$toast.error(error.message);
@@ -150,7 +150,7 @@ export default {
     },
     async getCities() {
       try {
-        let resp = await axios.get("/admin/show-cities");
+        let resp = await axios.get("/show-cities");
         console.log("datos para citeis ", resp.data)
         this.array_city = resp.data;
 
@@ -177,7 +177,7 @@ export default {
             phone: this.formData.phone,
             address: this.formData.address,
 
-            id_cities: this.formData.city_id,
+            id_cities: this.formData.city_id
 
           });
         this.$toast.success(res.data.message);
@@ -190,7 +190,7 @@ export default {
     async update_driver() {
       try {
         let res = await axios
-          .post("/admin/update-drivers/", {
+          .post("/update-drivers/", {
             id_driver: this.formData.id_driver,
             name: this.formData.name,
             username: this.formData.username.username,
@@ -198,7 +198,7 @@ export default {
             phone: this.formData.phone,
             address: this.formData.address,
             id_user: this.formData.user_id,
-            id_cities: this.formData.city_id,
+            id_cities: this.formData.city_id
 
           })
         this.$toast.success(res.data.message);
@@ -208,8 +208,6 @@ export default {
       } catch (error) {
         this.$toast.error(error.message);
       }
-
-
 
     },
     send_form_data() {

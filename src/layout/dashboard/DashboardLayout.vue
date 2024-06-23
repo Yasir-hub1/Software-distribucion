@@ -4,9 +4,9 @@
       <template slot="links">
         <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel" />
         <sidebar-link to="/dashboard/users" name="Usuarios" icon="ti-user" />
-        <sidebar-link to="/dashboard/routers" name="Rutas" icon="ti-view-list-alt" />
-        <sidebar-link to="/dashboard/vehicles" name="Vehiculos" icon="ti-view-list-alt" />
-        <sidebar-link to="/dashboard/reports" name="Reportes" icon="ti-view-list-alt" />
+        <sidebar-link to="/dashboard/products" name="Productos" icon="ti-view-list-alt" />
+        <sidebar-link to="/dashboard/vehicles" name="Vehiculos" icon="ti-truck" />
+        <sidebar-link to="/dashboard/reports" name="Reportes" icon="ti-bar-chart-alt" />
         <sidebar-link to="/dashboard/dispatch_orders" name="Ordenes de Despacho" icon="ti-view-list-alt" />
         <sidebar-link to="/dashboard/table-list" name="Table List" icon="ti-view-list-alt" />
         <sidebar-link to="/dashboard/typography" name="Typography" icon="ti-text" />

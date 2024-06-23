@@ -4,7 +4,7 @@
       <template v-if="stateForm === 0">
         <div class="col-12 mt-3">
           <card :title="table.title" :subTitle="table.subTitle">
-            <button class="btn btn-outline-success" type="button" @click="store()">Agregar</button>
+            <button class="btn btn-outline-success" type="button" @click="store()">Agregar vehículo</button>
             <div slot="raw-content" class="table-responsive">
               <table class="table" :class="tableClass">
                 <thead>
@@ -22,10 +22,8 @@
                     <td>{{ item.photo }}</td>
                     <td>{{ item.state }}</td>
                     <td>
-
                       <button class="btn btn-outline-warning" type="button" @click="edit(item)">Editar</button>
-                      <button class="btn btn-outline-danger" type="button"
-                        @click="eliminarItem(item.id)">Eliminar</button>
+                      <button class="btn btn-outline-danger" type="button" @click="eliminarItem(item.id)">Eliminar</button>
                     </td>
                   </tr>
                 </tbody>
@@ -35,47 +33,46 @@
         </div>
       </template>
 
-
       <form class="row g-3">
-          <template v-if="stateForm === 2">
-            <div class="container mt-3">
-              <card title="Actualizar Datos">
+        <template v-if="stateForm === 1 || stateForm === 2">
+          <div class="container mt-3">
+            <card :title="stateForm === 1 ? 'Agregar Vehículo' : 'Actualizar Datos'">
               <form @submit.prevent="send_form_data">
-
                 <div class="col-12">
-                    <label for="plate" class="form-label"> Nro. de Placa: </label>
-                    <input type="text" class="form-control" id="plate" v-model="formData.plate" required placeholder="5874ABC">
-                  </div>
-                  <div class="col-12">
-                    <label for="model" class="form-label"> Modelo: </label>
-                    <input type="text" class="form-control" id="model" v-model="formData.model.model" required placeholder="Suzuki Celerio">
-                  </div>
-                  <div class="col-12">
-                    <label for="brand" class="form-label"> Marca: </label>
-                    <input type="text" class="form-control" id="brand" v-model="formData.brand" required placeholder="Suzuki">
-                  </div>
-                  <div class="col-12">
-                    <label for="ability" class="form-label"> Capacidad: </label>
-                    <input type="text" class="form-control" id="ability" v-model="formData.ability" required placeholder="123456">
-                  </div>
-                  <div class="col-12">
-                    <label for="photo" class="form-label"> Foto: </label>
-                    <input type="text" class="form-control" id="photo"  v-model="formData.photo">
-                  </div>
+                  <label for="plate" class="form-label">Nro. de Placa:</label>
+                  <input type="text" class="form-control" id="plate" v-model="formData.plate" required placeholder="5874ABC">
+                </div>
+                <div class="col-12">
+                  <label for="model" class="form-label">Modelo:</label>
+                  <input type="text" class="form-control" id="model" v-model="formData.model" required placeholder="Suzuki Celerio">
+                </div>
+                <div class="col-12">
+                  <label for="brand" class="form-label">Marca:</label>
+                  <input type="text" class="form-control" id="brand" v-model="formData.brand" required placeholder="Suzuki">
+                </div>
+                <div class="col-12">
+                  <label for="ability" class="form-label">Capacidad:</label>
+                  <input type="text" class="form-control" id="ability" v-model="formData.ability" required placeholder="123456">
+                </div>
+                <div class="col-12">
+                  <label for="photo" class="form-label">Foto:</label>
+                  <input type="text" class="form-control" id="photo" v-model="formData.photo">
+                </div>
+                <div class="col-12">
+                  <label for="state" class="form-label">Estado:</label>
+                  <select class="form-control" id="state" v-model="formData.state" required>
+                    <option value="" disabled>Seleccione Estado</option>
+                    <option value="Disponible">Disponible</option>
+                    <option value="No Disponible">No Disponible</option>
+                  </select>
+                </div>
 
-                  <div class="col-12">
-                    <label for="state" class="form-label"> Estado: </label>
-                    <input type="text" class="form-control" id="state"  v-model="formData.state" required placeholder="Disponible">
-                  </div>
-
-                                    
-                  <button type="submit" class="btn btn-success">Guardar</button>
-                  <button type="button" class="btn btn-secondary">Cancelar</button>
-
-                </form>
-              </card>
-            </div>
-          </template>
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-secondary" @click="cancel()">Cancelar</button>
+              </form>
+            </card>
+          </div>
+        </template>
       </form>
     </div>
   </div>
@@ -84,8 +81,8 @@
 <script>
 import { PaperTable } from "@/components";
 import axios from "axios";
-import toast from "vue-toast-notification";
-const tableColumns = ["#", "Nro de Placa", "Modelo", "Marca", "Foto", "Estado", "Opciones"];
+
+const tableColumns = ["#", "Nro de Placa", "Modelo", "Marca", "Capacidad", "Foto", "Estado", "Opciones"];
 
 export default {
   name: "Table-userDriver",
@@ -109,8 +106,6 @@ export default {
       },
       vehicles: [],
       stateForm: 0,
-
-
       formData: {
         id: null,
         plate: "",
@@ -130,64 +125,56 @@ export default {
   methods: {
     async getVehicle() {
       try {
-        let resp = await axios.get("/admin/show-vehicles");
-        this.vehicles = resp.data.data.vehicles;
-        console.log("datos para vehiculos ", resp.data)
+        let resp = await axios.get("/show-vehicles");
+        this.vehicles = resp.data.vehicles;
+        //console.log("datos para vehiculos ", resp.data)
         this.$toast.success(resp.data.message);
       } catch (error) {
         this.$toast.error(error.message);
       }
     },
-
     edit(item) {
       this.stateForm = 2;
-      this.formData.id = item.id; // Asigna el ID del vehículo al campo id de formData
-      this.openForm('vehicle', 'update', item);
-  },
-
+      this.formData = { ...item }; // Asigna todos los valores del vehículo seleccionado al formData
+    },
     store(){
-      this.stateForm = 1,
+      this.stateForm = 1;
       this.openForm('vehicle', 'store');
     },
     async store_vehicle() {
       try {
-        let res = await axios
-          .post("/signup-admin/", {
-
-            plate: this.formData.plate,
-            model: this.formData.model,
-            brand: this.formData.brand,
-            ability: this.formData.ability,
-            photo: this.formData.photo,
-            state: this.formData.state,
-
-          });
+        let res = await axios.post("/store-vehicles", {
+          plate: this.formData.plate,
+          model: this.formData.model,
+          brand: this.formData.brand,
+          ability: this.formData.ability,
+          photo: this.formData.photo,
+          state: this.formData.state,
+        });
         this.$toast.success(res.data.message);
         this.getVehicle();
-        this.stateForm=0;
+        this.stateForm = 0;
       } catch (error) {
         this.$toast.error(error.message);
       }
-     },
-
-  async update_vehicle() {
-   try {
-    let res = await axios.post(`/admin/update-vehicles/${this.formData.id}`, {
-      plate: this.formData.plate,
-      model: this.formData.model,
-      brand: this.formData.brand,
-      ability: this.formData.ability,
-      photo: this.formData.photo,
-      state: this.formData.state,
-    });
-    this.$toast.success(res.data.message);
-    this.getVehicle();
-    this.stateForm = 0;
-  } catch (error) {
-    this.$toast.error(error.message);
-  }
-},
-
+    },
+    async update_vehicle() {
+      try {
+        let res = await axios.post(`/update-vehicles/${this.formData.id}`, {
+          plate: this.formData.plate,
+          model: this.formData.model,
+          brand: this.formData.brand,
+          ability: this.formData.ability,
+          photo: this.formData.photo,
+          state: this.formData.state,
+        });
+        this.$toast.success(res.data.message);
+        this.getVehicle();
+        this.stateForm = 0;
+      } catch (error) {
+        this.$toast.error(error.message);
+      }
+    },
     send_form_data() {
       if (this.stateForm == 1) {
         this.store_vehicle();
@@ -199,34 +186,30 @@ export default {
     openForm(model, action, data = []) {
       console.log("Datos para editar ", data)
       switch (model) {
-        case "driver": {
+        case "vehicle": {
           switch (action) {
             case "store": {
-
-              this.plate = "";
-              this.model = "";
-              this.brand = "";
-              this.ability = "";
-              this.photo = "";
-              this.state = "";
+              this.formData = {
+                id: null,
+                plate: "",
+                model: "",
+                brand: "",
+                ability: "",
+                photo: "",
+                state: "",
+              };
               break;
             }
             case "update": {
-
-              this.formData.plate = data["plate"];
-              this.formData.model = data["model"];
-              // this.formData.password = '';
-              this.formData.brand = data["brand"];
-              this.formData.ability = data["ability"];
-              this.formData.photo = data["photo"];
-              this.formData.state = data["state"];
+              this.formData = { ...data }; // Asigna todos los valores del vehículo al formData
               break;
             }
-
           }
-
         }
       }
+    },
+    cancel() {
+      this.stateForm = 0;
     },
   },
   mounted() {

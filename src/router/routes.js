@@ -8,7 +8,7 @@ import Maps from "@/pages/Maps.vue";
 import Typography from "@/pages/Typography.vue";
 import TableList from "@/pages/TableList.vue";
 import Login from "@/pages/Login.vue";
-import Routes from "../pages/Routes.vue";
+import Products from "../pages/Products.vue";
 import Vehicles from "../pages/Vehicles.vue";
 import Reports from "../pages/Reports.vue";
 import Dispatch_orders from "../pages/Dispatch_orders.vue";
@@ -40,9 +40,9 @@ const routes = [
         component: Users,
       },
       {
-        path: "/dashboard/routers",
-        name: "RUTAS",
-        component: Routes,
+        path: "/dashboard/products",
+        name: "PRODUCTOS",
+        component: Products,
       },
       {
         path: "/dashboard/vehicles",
@@ -56,7 +56,7 @@ const routes = [
       },
       {
         path: "/dashboard/dispatch_orders",
-        name: "Ordenes de Despaacho",
+        name: "Ordenes de Despacho",
         component: Dispatch_orders,
       },
       {

@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "transporte",
+    "slug": "apptransporte",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ryac",
+      "config": {
+        "googleMapsApiKey": "AIzaSyABHJaLOgaxiB3mVzOaJpMd8VDDgxfCBHE"
+      },
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.ryac",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyABHJaLOgaxiB3mVzOaJpMd8VDDgxfCBHE"
+        }
+      },
+      "permissions": [
+        "ACCESS_BACKGROUND_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "FOREGROUND_SERVICE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "237ff7bc-6324-41fc-80f1-f67c4b58a37a"
+      }
+    },
+    "owner": "rister"
+  }
+}

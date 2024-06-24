@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12, // Tamaño de la fuente de las etiquetas
     fontWeight: 'bold',
+    bottom:7
   },
 
 });

@@ -100,8 +100,8 @@ class OrderController extends Controller
 public function showOrder()
 {
     try {
-        // Obtener todas las órdenes con sus clientes
-        $orders = Order::with('customer')->get();
+        // Obtener todas las órdenes con sus clientes, ordenadas por fecha de creación en orden descendente
+        $orders = Order::with('customer')->orderBy('id', 'desc')->get();
 
         // Transformar las órdenes en un array simple
         $ordersArray = $orders->map(function ($order) {
@@ -123,6 +123,7 @@ public function showOrder()
         return response()->json(['error' => 'Error fetching orders', 'message' => $e->getMessage()], 500);
     }
 }
+
 
 
     /**

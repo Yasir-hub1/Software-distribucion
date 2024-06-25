@@ -12,8 +12,8 @@ class Order extends Model
         'date',
         'state',
         'total',
-        /* 'latitud',
-        'longitud', */
+         'latitud',
+        'longitud', 
         'customer_id'
 
     ];

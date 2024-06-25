@@ -42,13 +42,13 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         // Validar la solicitud
-        $request->validate([
+       /*  $request->validate([
             'date' => 'required|string',
             'state' => 'required|string',
             'latitud' => 'required|string',
             'longitud' => 'required|string',
             'customer_id' => 'required|integer',
-        ]);
+        ]); */
     
         try {
             // Crear la orden

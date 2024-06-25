@@ -4,15 +4,11 @@ import { orderAdapter } from '../../../Adapters/OrderAdapter';
 import { config } from '../../../Config';
 import { formatDate, formatDate2 } from '../../../Helper/Helpers';
 
-const Pendiente = ({navigation}) => {
+const Pendiente = () => {
     const [listOrderInPendiente, setlistOrderInPendiente] = useState([])
     const [isLoading, setIsLoading] = useState(false)
   
   
-    const NavigationsScreens = (screens, params) => {
-      navigation.navigate(screens, params ? params : undefined);
-    }
-
     useEffect(() => {
         getOrderInPendiente();
       }, [])
@@ -40,7 +36,7 @@ const Pendiente = ({navigation}) => {
 
     const renderClassItem = ({ item }) => (
         <>
-        {/* <TouchableOpacity onPress={()=>NavigationsScreens("detallePendiente",item)}> */}
+       
         <View style={styles.classItem}>
             <View style={styles.classContent}>
                 <View style={[styles.card, { backgroundColor: "#FAFAD2" }]}>
@@ -51,7 +47,7 @@ const Pendiente = ({navigation}) => {
             </View>
         </View>
 
-        {/* </TouchableOpacity> */}
+      
         </>
     );
 

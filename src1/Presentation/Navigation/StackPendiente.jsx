@@ -2,8 +2,7 @@
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import Progreso from '../Screens/Progreso/Progreso';
-import Map from '../Screens/Progreso/Map/Map';
+
 import Pendiente from '../Screens/Pendiente/Pendiente';
 import DetallePendiente from '../Screens/Pendiente/DetallePendiente';
 

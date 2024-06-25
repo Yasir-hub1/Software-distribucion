@@ -1,22 +1,21 @@
-import { Image, Text, TouchableOpacity, View, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
+import { Text, TouchableOpacity, View, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import {  useDispatch } from 'react-redux';
+
 import { config } from '../../../Config';
-import { Image as img } from '../../Assets/Image/path';
+
 import Styles from './Style';
 import { Button } from 'react-native-elements';
-import * as Notifications from 'expo-notifications';
-import Constants from "expo-constants"
+
 import { orderAdapter } from '../../../Adapters/OrderAdapter';
 import { formatDate } from '../../../Helper/Helpers';
 import { authAdapter } from '../../../Adapters/AuthAdapter';
 const Progreso = ({ navigation }) => {
   const dispatch = useDispatch();
-  console.log("navigations ",)
-  // const navigation = useNavigation();
-  const user = useSelector((state) => state.user.user);
-  const [optionSelected, setOptionSelected] = useState(0);
+ 
+
+  
+
   const [listOrderInProgress, setlistOrderInProgress] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -25,31 +24,6 @@ const Progreso = ({ navigation }) => {
     navigation.navigate(screens, params ? params : undefined);
   }
 
-  /*   useEffect(() => {
-      // Función asincrónica para solicitar permisos
-      const registerForPushNotifications = async () => {
-          // Solicitar permisos de notificación
-          const { granted } = await Notifications.getPermissionsAsync();
-          if (!granted) {
-              // Si el permiso no está otorgado, solicitar permiso al usuario
-              const { status } = await Notifications.requestPermissionsAsync();
-              if (status !== 'granted') {
-                  // Manejar el caso en que el usuario no otorga permisos
-                  alert('Debes otorgar permisos de notificación para recibir notificaciones push.');
-                  return;
-              }
-          }
-  
-          // Obtener el token de notificación push
-          const expoPushToken = await Notifications.getExpoPushTokenAsync({
-            projectId: Constants.expoConfig.extra.eas.projectId,
-          });
-          console.log('Token de notificación:', expoPushToken);
-          // Aquí puedes guardar el token en el estado, enviarlo al servidor, etc.
-      };
-  
-      registerForPushNotifications(); // Llamar a la función para iniciar el proceso
-  }, []); */
   useEffect(() => {
     getOrderInProgress();
   }, [])
@@ -110,17 +84,12 @@ const Progreso = ({ navigation }) => {
 
 
 
-  console.log("STATE RECENTE ", optionSelected);
+ 
 
   return (
     <View style={Styles.container}>
       <View style={Styles.topButtonsContainer}>
-        {/*  <TouchableOpacity onPress={() => NavigationsScreens("Previous")} style={Styles.topButton}>
-          <Text style={Styles.topButtonText}>Historial de entrega</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => NavigationsScreens("Next", { classes })} style={Styles.topButton}>
-          <Text style={Styles.topButtonText}>Proximas entregas</Text>
-        </TouchableOpacity> */}
+       
       </View>
       <FlatList
         contentContainerStyle={{ paddingHorizontal: 16 }}

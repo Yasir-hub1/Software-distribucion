@@ -8,7 +8,6 @@ import CustomButton from '../../Components/Button/CustomButton';
 // import { AuthContext } from '../../context/AuthContext';
 import { useDispatch } from "react-redux";
 import { authAdapter } from "../../../Adapters/AuthAdapter";
-import { localStorage } from "../../../Adapters/LocalStorageAdapter";
 import PassInputField from "../../Components/Inputs/PassInputField";
 import { useForm } from "react-hook-form";
 import TextInputField from "../../Components/Inputs/TextInputField";
@@ -22,10 +21,6 @@ const Login = ({ navigation }) => {
   const [Error, setError] = useState(null);
   const [loading, setloading] = useState(false);
 
-  //TODO: Inicializacion de Onboarding
-  useEffect(() => {
-    localStorage.onboarding(navigation);
-  }, []);
 
 
   /* Errores de formulario */
@@ -43,7 +38,7 @@ const Login = ({ navigation }) => {
   };
 
 
-  //*******------para el Login------*********
+
 
 
 
@@ -156,16 +151,17 @@ const Login = ({ navigation }) => {
               flexDirection: 'row',
               justifyContent: 'center',
               marginBottom: 30,
+              top:20
             }}
           >
-           {/*  <Text>Aún no tienes una cuenta?</Text>
+            <Text>Aún no tienes una cuenta?</Text>
             <TouchableOpacity onPress={() => navigation.navigate(config.routes.Sign_up)}>
               <View style={{ marginLeft: 40 }} />
               <Text style={{ color: '#fe5000', fontWeight: '700' }}>
                 {' '}
                 Regístrate
               </Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </View>
 
         </View>

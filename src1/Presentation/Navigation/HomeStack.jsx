@@ -9,22 +9,18 @@ import { StyleSheet, View } from 'react-native';
 
 // import "./BackGround";
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import Pendiente from '../Screens/Pendiente/Pendiente';
-import Progreso from '../Screens/Progreso/Progreso';
-import Completado from '../Screens/Completado/Completado';
-import { Button } from 'react-native-elements';
-import { authAdapter } from '../../Adapters/AuthAdapter';
-// const Stack = createNativeStackNavigator();
+
+
 import { useDispatch } from "react-redux";
 import StackProgress from './StackProgress';
 import StackPendiente from './StackPendiente';
+import Completado from '../Screens/Completado/Completados';
 
 const Tab=createMaterialTopTabNavigator()
 
 function HomeStack() {
-  const dispatch = useDispatch();
+
 
   
   return (

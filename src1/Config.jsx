@@ -1,5 +1,5 @@
 export const config = {
-  BASE_URL: "http://192.168.100.211:8000/api",
+  BASE_URL: "http://54.89.151.2/api",
   PREVIEW_IMAGE_COMPANY: "https://ws.cotifacil.com/",
   
 

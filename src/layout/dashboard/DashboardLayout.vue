@@ -7,14 +7,14 @@
         <sidebar-link to="/dashboard/products" name="Productos" icon="ti-view-list-alt" />
         <sidebar-link to="/dashboard/vehicles" name="Vehiculos" icon="ti-truck" />
         <sidebar-link to="/dashboard/reports" name="Reportes" icon="ti-bar-chart-alt" />
-        <sidebar-link to="/dashboard/dispatch_orders" name="Ordenes de Despacho" icon="ti-view-list-alt" />
-        <sidebar-link to="/dashboard/delivery" name="Asignacion de recursos" icon="ti-view-list-alt" />
-        <sidebar-link to="/dashboard/typography" name="Typography" icon="ti-text" />
+        <sidebar-link to="/dashboard/dispatch_orders" name="Ordenes de Despacho" icon="ti-receipt" />
+        <sidebar-link to="/dashboard/delivery" name="Entrega" icon="ti-view-list-alt" />
+       <!--  <sidebar-link to="/dashboard/typography" name="Typography" icon="ti-text" />
         <sidebar-link to="/dashboard/icons" name="Icons" icon="ti-pencil-alt2" />
         <sidebar-link to="/dashboard/maps" name="Map" icon="ti-map" />
-        <sidebar-link to="/dashboard/notifications" name="Notifications" icon="ti-bell" />
+        <sidebar-link to="/dashboard/notifications" name="Notifications" icon="ti-bell" /> -->
       </template>
-      <mobile-menu>
+    <!--   <mobile-menu>
         <li class="nav-item">
           <a class="nav-link">
             <i class="ti-panel"></i>
@@ -35,7 +35,7 @@
           </a>
         </li>
         <li class="divider"></li>
-      </mobile-menu>
+      </mobile-menu> -->
     </side-bar>
     <div class="main-panel">
       <top-navbar></top-navbar>

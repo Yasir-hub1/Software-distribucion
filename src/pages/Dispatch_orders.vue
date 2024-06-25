@@ -24,7 +24,7 @@
                       <button class="btn btn-outline-success" type="button" @click="ver(item)">Ver</button>
                       <button class="btn btn-outline-warning" type="button" @click="edit(item)">Editar</button>
                       <button class="btn btn-outline-danger" type="button" @click="asignar(item)">Asignar</button>
-                      <button class="btn btn-outline-danger" type="button" @click="eliminarItem(item.id)">Anular</button>
+                     <!--  <button class="btn btn-outline-danger" type="button" @click="eliminarItem(item.id)">Anular</button> -->
                     </td>
                   </tr>
                 </tbody>
@@ -378,7 +378,7 @@ export default {
 
     async assignDriverAndVehicle() {
       try {
-        let res = await axios.post(`/assign-driver-vehicle/${this.formData.id}`, {
+        let res = await axios.post(`orders/${this.formData.id}/assign-driver-vehicle`, {
           vehicle_id: this.formData.vehicle_id,
           driver_id: this.formData.driver_id
         });

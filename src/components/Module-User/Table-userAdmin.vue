@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="col-12 mt-3">
     <card :title="table1.title" :subTitle="table1.subTitle">
       <div slot="raw-content" class="table-responsive">
@@ -7,14 +7,14 @@
       </div>
     </card>
   </div>
-</template>
+</template> -->
 
 
 <script>
 import { PaperTable } from "@/components";
 
-const tableColumns = ["Id", "Name", "Salary", "Country", "City"];
-const tableData = [
+//const tableColumns = ["Id", "Name", "Salary", "Country", "City"];
+/* const tableData = [
   {
     id: 1,
     name: "Dakota Rice",
@@ -23,7 +23,7 @@ const tableData = [
     city: "Oud-Turnhout",
   },
   // Resto de tus datos de tabla aquí
-];
+]; */
 
 export default {
   name:"Table-userAdmin",

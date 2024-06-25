@@ -2,7 +2,7 @@
   <div>
     <b-nav tabs>
 
-      <b-nav-item :active="activeTab === 'admin'" @click="stateTab('admin')">Administradores</b-nav-item>
+      <!-- <b-nav-item :active="activeTab === 'admin'" @click="stateTab('admin')">Administradores</b-nav-item> -->
       <b-nav-item :active="activeTab === 'driver'" @click="stateTab('driver')">Transportistas</b-nav-item>
       <b-nav-item :active="activeTab === 'customer'" @click="stateTab('customer')">Clientes</b-nav-item>
 

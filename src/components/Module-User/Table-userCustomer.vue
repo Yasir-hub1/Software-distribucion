@@ -38,13 +38,19 @@
       <form class="row g-3">
           <template v-if="stateForm === 1 || stateForm === 2">
             <div class="container mt-3">
-              <card :title="stateForm === 1 ? 'Agregar Vehículo' : 'Actualizar Datos'">
+              <card :title="stateForm === 1 ? 'Agregar Cliente' : 'Actualizar Datos'">
               <form @submit.prevent="send_form_data">
 
                 <div class="col-12">
-                    <label for="nombre" class="form-label"> Nombre: </label>
-                    <input type="text" class="form-control" id="nombre" v-model="formData.nombre" required placeholder="Ana">
+                    <label for="username" class="form-label"> Nombre: </label>
+                    <input type="text" class="form-control" id="username" v-model="formData.username" required placeholder="Ana">
                   </div>
+
+                  <div class="col-12">
+                    <label for="password" class="form-label"> Contraseña: </label>
+                    <input type="text" class="form-control" id="password" v-model="formData.password" >
+                  </div>
+
                   <div class="col-12">
                     <label for="phone" class="form-label"> Teléfono: </label>
                     <input type="text" class="form-control" id="phone" v-model="formData.phone" required placeholder="123456">
@@ -59,7 +65,7 @@
                   <div class="col-sm-9">
                     <select id="city_id" class="form-control" v-model="formData.city_id" required>
                       <option value="" disabled> Seleccione Ciudad</option>
-                      <option v-for="city in array_city" :key="city.id" :value="city.id">{{ city.name }}</option>
+                      <option v-for="city in cities" :key="city.id" :value="city.id">{{ city.name }}</option>
                     </select>
                   </div>
                 </div>
@@ -86,7 +92,7 @@
 
 
 <script>
-import { PaperTable } from "@/components";
+//import { PaperTable } from "@/components";
 import axios from "axios";
 import toast from "vue-toast-notification";
 
@@ -100,9 +106,9 @@ export default {
       default: "striped",
     },
   },
-  components: {
+ /*  components: {
     PaperTable
-  },
+  }, */
   data() {
     return {
       activeTab: 'admin',
@@ -115,7 +121,7 @@ export default {
       customers: [],
       stateForm: 0,
 
-      array_city: [],
+      cities: [],
       array_user: [],
 
       formData: {
@@ -127,6 +133,8 @@ export default {
         //user: "",
         //user_id: 0,
         id_customer: 0,
+        username: "",
+        password: "",
       }
     };
   },
@@ -150,7 +158,7 @@ export default {
       try {
         let resp = await axios.get("/show-cities");
         console.log("datos para la ciudad ", resp.data)
-        this.array_city = resp.data;
+        this.cities = resp.data.cities;
 
       } catch (error) {
         this.$toast.error(error.message);
@@ -179,11 +187,12 @@ export default {
       try {
         let res = await axios
           .post("/signup-customer/", {
-
-            nombre: this.formData.nombre,
+            device_name: "web",
+            username: this.formData.username,
             phone: this.formData.phone,
             email: this.formData.email,
-            id_cities: this.formData.city_id
+            id_cities: this.formData.city_id,
+            password: this.formData.password
 
           });
         this.$toast.success(res.data.message);
@@ -198,11 +207,12 @@ export default {
         let res = await axios
           .post(`/update-customer/${this.formData.id}`, {
             //id_customer: this.formData.id_customer,
-            nombre: this.formData.nombre,
+            username: this.formData.username,
             phone: this.formData.phone,
             email: this.formData.email,
             //id_user: this.formData.user_id,
-            id_cities: this.formData.city_id
+            id_cities: this.formData.city_id,
+            password: this.formData.password
 
           })
         this.$toast.success(res.data.message);
@@ -254,6 +264,11 @@ export default {
           }
 
         }
+      }
+    },
+    name_city(city){
+      if (city === null || city === '' || city === undefined) {
+        return 'Sin registro de ciudad';
       }
     },
     cancel() {

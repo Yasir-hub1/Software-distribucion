@@ -11,7 +11,7 @@ import Products from "../pages/Products.vue";
 import Vehicles from "../pages/Vehicles.vue";
 import Reports from "../pages/Reports.vue";
 import Dispatch_orders from "../pages/Dispatch_orders.vue";
-import Delivery from "@/pages/Delivery.vue";
+import Delivery from "../pages/Delivery.vue";
 
 const routes = [
   {
@@ -81,7 +81,7 @@ const routes = [
       },
       {
         path: "/dashboard/delivery",
-        name: "Asignacion de recursos",
+        name: "entrega",
         component: Delivery,
       },
     ],

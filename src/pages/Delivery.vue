@@ -1,101 +1,76 @@
 <template v-if="stateForm === 1">
-      <div class="container mt-3">
-        <card title="Asignar Chofer y Vehículo">
-          <form @submit.prevent="assignDriverAndVehicle">
-            <div class="col-12">
-              <label for="vehicle_id" class="form-label">Vehículo:</label>
-              <select id="vehicle_id" class="form-control" v-model="formData.vehicle_id" required>
-                <option value="" disabled>Seleccione el Vehículo</option>
-                <option v-for="vehicle in vehicles" :key="vehicle.id" :value="vehicle.id">{{vehicle.plate + ' - ' + vehicle.model}}</option>
-              </select>
-            </div>
-            <div class="col-12">
-            <label for="driver_id" class="form-label">Chofer:</label>
-            <select id="driver_id" class="form-control" v-model="formData.driver_id" required>
-              <option value="" disabled>Seleccione el Chofer</option>
-              <option v-for="driver in drivers" :key="driver.id" :value="driver.id">{{ driver.name }}</option>
-            </select>
-          </div>
-            <button type="submit" class="btn btn-success mt-3">Asignar</button>
-            <button type="button" class="btn btn-secondary mt-3" @click="cancel">Cancelar</button>
-          </form>
-        </card>
-      </div>
+  <div class="container mt-3">
+    <card title="Lista de entregas">
+      <form @submit.prevent="assignDriverAndVehicle">
+        <div slot="raw-content" class="table-responsive">
+          <table class="table" :class="tableClass">
+            <thead>
+              <tr>
+                <th v-for="column in table.columns" :key="column">{{ column }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in deliveries" :key="index">
+                <td>{{ item.num_order }}</td>
+                <td>{{ item.date }}</td>
+                <td>{{ item.state }}</td>
+                <td>{{ item.description }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </form>
+    </card>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
 import toast from "vue-toast-notification";
 
-//const tableColumns = ["ID", "Fecha", "Estado", "Total", "Latitud", "Longitud", "Cliente", "Opciones"];
+const tableColumns = ["Nro Orden", "Fecha", "Estado", "Descripcion"];
 
 export default {
-  name: 'AssignDriverVehicle',
+  name: 'DeliveryManager',
+  props: {
+    type: {
+      type: String, // striped | hover
+      default: "striped",
+    },
+  },
+
   data() {
     return {
-      stateForm: 0,
+      activeTab: 'admin',
       table: {
-        title: "Asignar",
-        subTitle: "",
-        //columns: [...tableColumns],
+        title: "Entregas",
+        columns: [...tableColumns],
+        data: [],
       },
-      orders: [],
-      vehicles: [],
-      drivers: [],
+      deliveries: [],
+      stateForm: 0,
       formData: {
-        vehicle_id: null,
-        driver_id: null,
-        order_id: null
+        id: null,
+        date: "",
+        num_order: "",
+        state: "",
+        description: "",
       }
     };
   },
+  computed: {
+    tableClass() {
+      return `table-${this.type}`;
+    },
+  },
   methods: {
-    async getOrders() {
+    async getDelivery() {
       try {
-        let resp = await axios.get("/show-order");
-        this.orders = resp.data.orders;
+        let resp = await axios.get("/listar-delivery");
+        this.deliveries = resp.data.deliveries;
+        this.$toast.success(resp.data.message);
       } catch (error) {
         this.$toast.error(error.message);
-      }
-    },
-    async getVehicles() {
-      try {
-        let resp = await axios.get("/vehiculo-disponible");
-        this.vehicles = resp.data.vehicles;
-        //console.log("viendo los vehiculos",resp.data);
-      } catch (error) {
-        this.$toast.error(error.message);
-      }
-    },
-    async getDrivers() {
-      try {
-        let resp = await axios.get("/chofer-disponible");
-        this.drivers = resp.data.drivers;
-        //console.log("viendo los choferes",resp.data);
-
-      } catch (error) {
-        this.$toast.error(error.message);
-      }
-    },
-    assign(order) {
-      this.stateForm = 1;
-      this.formData.order_id = order.id;
-    },
-    async assignDriverAndVehicle() {
-      try {
-        let res = await axios.post(`/assign-driver-vehicle/${this.formData.order_id}`, {
-          vehicle_id: this.formData.vehicle_id,
-          driver_id: this.formData.driver_id
-        });
-        this.$toast.success(res.data.message);
-        this.getOrders();
-        this.stateForm = 0;
-      } catch (error) {
-        if (error.response && error.response.data && error.response.data.error) {
-          this.$toast.error(error.response.data.error);
-        } else {
-          this.$toast.error('Error al asignar chofer y vehículo a la orden.');
-        }
       }
     },
 
@@ -104,10 +79,7 @@ export default {
     }
   },
   mounted() {
-    this.getOrders();
-    this.getVehicles();
-    this.getDrivers();
+    this.getDelivery();
   }
 };
 </script>
-

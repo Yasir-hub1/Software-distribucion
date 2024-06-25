@@ -19,7 +19,7 @@
                     <td>{{ item.ci }}</td>
                     <td>{{ item.phone }}</td>
                     <td>{{ item.address }}</td>
-                    <td>{{ item.photo }}</td>
+                    <!-- <td>{{ item.photo }}</td> -->
                     <td>{{ item.city.name }}</td>
                     <td>
 
@@ -37,9 +37,9 @@
 
 
       <form class="row g-3">
-          <template v-if="stateForm === 2">
+          <template v-if="stateForm === 1 || stateForm === 2">
             <div class="container mt-3">
-              <card title="Actualizar Datos">
+              <card :title="stateForm === 1 ? 'Agregar Chofer' : 'Actualizar Datos'">
               <form @submit.prevent="send_form_data">
 
                 <div class="col-12">
@@ -48,7 +48,7 @@
                   </div>
                   <div class="col-12">
                     <label for="username" class="form-label"> Nombre de usuario: </label>
-                    <input type="text" class="form-control" id="username" v-model="formData.username.username" required placeholder="nombre de usuario">
+                    <input type="text" class="form-control" id="username" v-model="formData.username" required placeholder="nombre de usuario">
                   </div>
                   <div class="col-12">
                     <label for="ci" class="form-label"> Carnet de identidad: </label>
@@ -68,7 +68,7 @@
                   <div class="col-sm-9">
                     <select id="city_id" class="form-control" v-model="formData.city_id" required>
                       <option value="" disabled> Seleccione Ciudad</option>
-                      <option v-for="city in array_city" :key="city.id" :value="city.id">{{ city.name }}</option>
+                      <option v-for="city in cities" :key="city.id" :value="city.id">{{ city.name }}</option>
                     </select>
                   </div>
                 </div>
@@ -86,10 +86,10 @@
 </template>
 
 <script>
-import { PaperTable } from "@/components";
+//import { PaperTable } from "@/components";
 import axios from "axios";
 import toast from "vue-toast-notification";
-const tableColumns = ["#", "name", "CI", "phone", "Direccion", "Foto", "Ciudad", "Opciones"];
+const tableColumns = ["#", "Nombre", "CI", "Teléfono", "Dirección", "Ciudad", "Opciones"];
 
 export default {
   name: "Table-userDriver",
@@ -99,9 +99,9 @@ export default {
       default: "striped",
     },
   },
-  components: {
+ /*  components: {
     PaperTable
-  },
+  }, */
   data() {
     return {
       activeTab: 'admin',
@@ -114,7 +114,7 @@ export default {
       drivers: [],
       stateForm: 0,
 
-      array_city: [],
+      cities: [],
 
 
 
@@ -141,7 +141,7 @@ export default {
     async getDriver() {
       try {
         let resp = await axios.get("/show-drivers");
-        this.drivers = resp.data.data.drivers;
+        this.drivers = resp.data.drivers;
         //console.log("datos para citeis ", resp.data)
         this.$toast.success(resp.data.message);
       } catch (error) {
@@ -151,8 +151,8 @@ export default {
     async getCities() {
       try {
         let resp = await axios.get("/show-cities");
-        console.log("datos para citeis ", resp.data)
-        this.array_city = resp.data;
+        //console.log("datos para citeis ", resp.data)
+        this.cities = resp.data.cities;
 
       } catch (error) {
         this.$toast.error(error.message);

@@ -68,39 +68,42 @@ class AuthController extends Controller
     {
         request()->validate([
             "username" => "required",
-            "password" => "required|min:8|max:20",
+            "password" => "required|min:6|max:20",
             "device_name" => "required"
 
         ]);
 
 
-        $driver = User::select(["id", "username", "password", "type_user"])
+        $user = User::select(["id", "username", "password", "type_user"])
             ->where("username", request("username"))
             ->where("type_user", "driver")
             ->first();
 
-        if (empty($driver)) {
+        if (empty($user)) {
             return $this->error(
                 __("El usuario no existe"),
 
             );
         }
 
-        /* Verificacion si el driver existe */
-        if (!$driver || !Hash::check(request("password"), $driver->password)) {
+        /* Verificacion si el user existe */
+        if (!$user || !Hash::check(request("password"), $user->password)) {
             throw ValidationException::withMessages([
                 "name" => [__("Credenciales incorrectas")]
             ]);
         }
 
-        $token = $driver->createToken(request("device_name"))->plainTextToken;
+        $token = $user->createToken(request("device_name"))->plainTextToken;
+
+        $driver=Driver::where("id_user",$user->id)->first();
 
         return $this->success(
             __("Bienvenid@"),
             [
-                "driver" => $driver->toArray(),
+                "user" => $user->toArray(),
+                "driver"=>$driver->toArray(),
 
-                "token" => $token,
+                "userToken" => $token,
             ]
         );
     }
@@ -117,33 +120,35 @@ class AuthController extends Controller
         ]);
 
 
-        $customer = User::select(["id", "username", "password", "type_user"])
+        $user = User::select(["id", "username", "password", "type_user"])
             ->where("username", request("username"))
             ->where("type_user", "customer")
             ->first();
 
-        if (empty($customer)) {
+        if (empty($user)) {
             return $this->error(
                 __("El usuario no existe"),
 
             );
         }
 
-        /* Verificacion si el customer existe */
-        if (!$customer || !Hash::check(request("password"), $customer->password)) {
+        /* Verificacion si el user existe */
+        if (!$user || !Hash::check(request("password"), $user->password)) {
             throw ValidationException::withMessages([
                 "username" => [__("Credenciales incorrectas")]
             ]);
         }
 
-        $token = $customer->createToken(request("device_name"))->plainTextToken;
+        $token = $user->createToken(request("device_name"))->plainTextToken;
+        $customer=Customer::where("id_user",$user->id)->first();
 
         return $this->success(
             __("Bienvenid@"),
             [
+                "user" => $user->toArray(),
                 "customer" => $customer->toArray(),
 
-                "token" => $token,
+                "userToken" => $token,
             ]
         );
     }
@@ -180,23 +185,35 @@ class AuthController extends Controller
             "password" => "required|min:8|max:20",
         ]);
         //: registrar datos del cliente
-        Customer::create([
-            "name" => request("username"),
-            "phone" => request("phone"),
-            "email" => request("email"),
 
-
-        ]);
         //: registrar el tipo de usuario
-        User::create([
+     $user= User::create([
             "username" => request("username"),
             "password" => bcrypt(request("password")),
             "type_user" => "customer",
             "created_at" => now(),
         ]);
 
+        $customer= Customer::create([
+            "nombre" => request("username"),
+            "phone" => request("phone"),
+            "email" => request("email"),
+
+            "id_cities"=>request("id_cities"),
+            "id_user" => $user->id,
+
+
+        ]);
+        $token = $user->createToken(request("device_name"))->plainTextToken;
+
         return $this->success(
-            __("Cuenta creada")
+            __("Bienvenid@"),
+            [
+                "user" => $user->toArray(),
+                "customer" => $customer->toArray(),
+
+                "userToken" => $token,
+            ]
         );
     }
 
@@ -244,7 +261,7 @@ class AuthController extends Controller
             __("Cuenta creada")
         );
 
-        // $driver = 
+        // $driver =
     }
 
 

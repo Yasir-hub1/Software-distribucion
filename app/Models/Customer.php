@@ -12,6 +12,8 @@ class Customer extends Model
         'nombre',
         'phone',
         'email',
+        'id_cities',
+        'id_user'
     ];
 
      // relacion de una ciudad a muchos Clientes

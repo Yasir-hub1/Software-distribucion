@@ -6,8 +6,10 @@ use App\Models\Order;
 use App\Models\Vehicle;
 use App\Models\Driver;
 use App\Models\VehicleDriver;
+use App\Models\OrderDriver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class OrderController extends Controller
 {
@@ -43,42 +45,39 @@ class OrderController extends Controller
         $request->validate([
             'date' => 'required|string',
             'state' => 'required|string',
-            'total' => 'required|string',
             'latitud' => 'required|string',
             'longitud' => 'required|string',
             'customer_id' => 'required|integer',
         ]);
-
+    
         try {
             // Crear la orden
             $order = Order::create([
                 'date' => $request->date,
                 'state' => $request->state,
-                'total' => $request->total,
                 'latitud' => $request->latitud,
                 'longitud' => $request->longitud,
                 'customer_id' => $request->customer_id,
+                'total' => 0, // Inicialmente, el total es 0
             ]);
-             $order->save();
-    
-             return response()->json([
-                 'message' => 'Orden creado correctamente',
-                 'order' => $order
-             ], 201);
-           
+            
+            return response()->json([
+                'message' => 'Orden creada correctamente',
+                'order' => $order
+            ], 201);
     
         } catch (\Throwable $th) {
-            DB::rollBack();
             return response()->json(['error' => 'Error al crear la orden', 'details' => $th->getMessage()], 500);
         }
     }
+    
     /**
      * Display the specified resource.
      *
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $order)
+  /*   public function show(Order $order)
     {
         try {
             // Obtener todos los productos con sus categorías
@@ -94,7 +93,37 @@ class OrderController extends Controller
                 'error' => $th->getMessage()
             ], 500);
         }
+    } */
+
+ 
+// OrderController.php
+public function showOrder()
+{
+    try {
+        // Obtener todas las órdenes con sus clientes
+        $orders = Order::with('customer')->get();
+
+        // Transformar las órdenes en un array simple
+        $ordersArray = $orders->map(function ($order) {
+            return [
+                'id' => $order->id,
+                'date' => $order->date,
+                'state' => $order->state,
+                'total' => $order->total,
+                'customer_id' => $order->customer_id,
+                'customer_name' => $order->customer->nombre // Incluir el nombre del cliente
+            ];
+        });
+
+        return response()->json([
+            'message' => 'Lista de órdenes',
+            'orders' => $ordersArray
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error fetching orders', 'message' => $e->getMessage()], 500);
     }
+}
+
 
     /**
      * Show the form for editing the specified resource.
@@ -119,7 +148,7 @@ class OrderController extends Controller
         $request->validate([
             'date' => 'required|string',
             'state' => 'required|string',
-            'total' => 'required|string',
+            //'total' => 'required|string',
             'latitud' => 'required|string',
             'longitud' => 'required|string',
             'customer_id' => 'required|integer',
@@ -162,53 +191,64 @@ class OrderController extends Controller
         }
     }
 
-    //para la asiganacion de vehiculo y chofer
-    /**
-     * Asignar chofer y vehículo disponible a una orden y registrar en la tabla intermedia.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function assignDriverAndVehicle(Request $request, Order $order)
-    {
-        // Validar la solicitud
-        $request->validate([
-            'vehicle_id' => 'required|exists:vehicles,id',
-            'driver_id' => 'required|exists:drivers,id',
-        ]);
+ /**
+ * Asignar chofer y vehículo disponible a una orden y registrar en las tablas intermedias.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @param  \App\Models\Order  $order
+ * @return \Illuminate\Http\Response
+ */
+public function assignDriverAndVehicle(Request $request, Order $order)
+{
+    try {
+        // Obtener el vehículo y verificar si está disponible
+        $vehicle = Vehicle::findOrFail($request->vehicle_id);
 
-        try {
-            // Obtener el vehículo y verificar si está disponible
-            $vehicle = Vehicle::findOrFail($request->vehicle_id);
-
-            if ($vehicle->state !== 'disponible') {
-                return response()->json([
-                    'error' => 'El vehículo seleccionado no está disponible para asignación'
-                ], 400);
-            }
-
-            // Obtener el chofer
-            $driver = Driver::findOrFail($request->driver_id);
-
-            // Crear una entrada en la tabla intermedia vehicle_driver
-            $assignment = VehicleDriver::create([
-                'order_id' => $order->id,
-                'vehicle_id' => $vehicle->id,
-                'driver_id' => $driver->id,
-                'date_assignment' => now(), // Fecha de asignación
-            ]);
-
+        if ($vehicle->state !== 'disponible') {
             return response()->json([
-                'message' => 'Chofer y vehículo asignados correctamente a la orden',
-                'assignment' => $assignment,
-            ], 200);
-
-        } catch (\Throwable $th) {
-            return response()->json([
-                'error' => 'Error al asignar chofer y vehículo a la orden',
-                'details' => $th->getMessage()
-            ], 500);
+                'error' => 'El vehículo seleccionado no está disponible para su asignación'
+            ], 400);
         }
+
+        // Obtener el chofer
+        $driver = Driver::findOrFail($request->driver_id);
+
+        // Verificar la cantidad de órdenes asignadas al chofer
+        $assignedOrdersCount = OrderDriver::where('driver_id', $driver->id)->count();
+        //dd($assignedOrdersCount);
+
+        if ($assignedOrdersCount >= 5) {
+            return response()->json([
+                'error' => 'El chofer seleccionado ya tiene 5 órdenes asignadas'
+            ], 400);
+        }
+        // Crear o actualizar la entrada en la tabla intermedia order_driver
+        $orderDriverAssignment = OrderDriver::create(
+            ['order_id' => $order->id, 'driver_id' => $driver->id],
+        );
+
+        //dd($orderDriverAssignment);
+
+        return response()->json([
+            'message' => 'Chofer y vehículo asignados correctamente a la orden',
+            'orderDriverAssignment' => $orderDriverAssignment,
+        ], 200);
+
+          //dd(response()->json('el json',[$orderDriverAssignment]));
+
+    } catch (ModelNotFoundException $e) {
+        return response()->json([
+            'error' => 'Error al asignar chofer y vehículo a la orden',
+            'details' => 'El vehículo o chofer no se encontró en la base de datos'
+        ], 404);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'error' => 'Error al asignar chofer y vehículo a la orden',
+            'details' => $th->getMessage()
+        ], 500);
     }
+}
+
+
+
 }

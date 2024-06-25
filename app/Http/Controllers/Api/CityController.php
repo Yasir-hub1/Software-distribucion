@@ -13,6 +13,19 @@ class CityController extends Controller
 
     public function show(City $city)
     {
-        return $city::all();
+        try {
+            // Obtener todos los productos con sus categorías
+            $cities = $city::all();
+
+            return response()->json([
+                'message' => 'Lista de ciudades',
+                'cities' => $cities
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'No se pudieron listar los datos.',
+                'error' => $th->getMessage()
+            ], 500);
+        }
     }
 }

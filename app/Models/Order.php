@@ -12,6 +12,8 @@ class Order extends Model
         'date',
         'state',
         'total',
+        /* 'latitud',
+        'longitud', */
         'customer_id'
 
     ];
@@ -25,6 +27,11 @@ class Order extends Model
      public function order_detail()
      {
          return $this->hasMany(OrderDetail::class);
+     }
+
+     public function customer()
+     {
+         return $this->belongsTo(Customer::class);
      }
 
 }

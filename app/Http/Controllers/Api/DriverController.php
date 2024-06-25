@@ -119,4 +119,31 @@ class DriverController extends Controller
             __("Se eliminó correctamente"),
         );
     }
+
+    ////choferes disponibles
+    public function getAvailableDrivers(): JsonResponse
+    {
+        try {
+            // Obtener los choferes con menos de 5 órdenes asignadas
+            $drivers = Driver::whereDoesntHave('orderDrivers', function($query) {
+                $query->select('driver_id')
+                      ->groupBy('driver_id')
+                      ->havingRaw('COUNT(*) >= 5');
+            })->get();
+    
+            // Convertir los resultados a un array simple con los nombres de los choferes
+            $driverNames = $drivers->toArray();
+    
+            return response()->json([
+                'message' => 'Lista de choferes con menos de 5 órdenes asignadas',
+                'drivers' => $driverNames,
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => 'Error al obtener la lista de choferes',
+                'details' => $th->getMessage(),
+            ], 500);
+        }
+    }
+    
 }

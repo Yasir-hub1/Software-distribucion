@@ -11,8 +11,6 @@ class OrderDetail extends Model
     protected $fillable = [
         'count',//placa
         'unit_price',
-        'oigin',
-        'destination',
         'total',
         'product_id',
         'order_id'

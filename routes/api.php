@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DeliveryController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderDetailController;
+use App\Models\Vehicle;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -85,7 +86,7 @@ Route::get("/show-categories", [CategoryController::class, "show"]);
 Route::get("/show-details/{id}", [OrderDetailController::class, "show"]);
 
 //para las ordenes
-Route::get("/show-order", [OrderController::class, "show"]);
+Route::get("/show-order", [OrderController::class, "showOrder"]);
 Route::post("/store-order", [OrderController::class, "store"]);
 Route::post("/update-order/{id}", [OrderController::class, "update"]);
 Route::get("/delete-order/{id}", [OrderController::class, "destroy"]);
@@ -93,10 +94,13 @@ Route::post('orders/{order}/assign-driver-vehicle', [OrderController::class, 'as
 
 //para los detalles
 Route::post('/store-orders-details', [OrderDetailController::class, 'store']);
-Route::get("/show-orders-details/{orderDetail}", [ProductController::class, "show"]);
+Route::get("/show-orders-details/{orderDetail}", [OrderDetailController::class, "showOrderDetails"]);
 
 
 Route::post('delivery/{order}/register-delivery', [DeliveryController::class, 'registerDelivery']);
+
+Route::get("/vehiculo-disponible", [VehicleController::class, "getVehiculosDisponibles"]);
+Route::get("/chofer-disponible", [DriverController::class, "getAvailableDrivers"]);
 
 
 /*Route::group(['middleware' => ["auth:sanctum"]], function () {

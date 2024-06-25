@@ -41,7 +41,7 @@ class VehicleController extends Controller
             'model' => 'required|string',
             'brand' => 'required|string',
             'ability' => 'required|string',
-            'photo' => 'required|string',
+           // 'photo' => 'required|string',
             'state' => 'required|string'
         ]);
     
@@ -55,7 +55,7 @@ class VehicleController extends Controller
                 'model' => $request->input('model'),
                 'brand' => $request->input('brand'),
                 'ability' => $request->input('ability'),
-                'photo' => $request->input('photo'),
+               // 'photo' => $request->input('photo'),
                 'state' => $request->input('state'),
             ]);
     
@@ -104,6 +104,26 @@ class VehicleController extends Controller
     }
     
 
+    //para que me devuelva los vehiculos disponibles
+    public function getVehiculosDisponibles(Vehicle $vehicle)
+{
+    try {
+        // Obtener todos los vehículos con estado 'disponible'
+        $vehicles = $vehicle::where('state', 'disponible')->get();
+
+        return response()->json([
+            'message' => 'Lista de vehículos disponibles',
+            'vehicles' => $vehicles
+        ]);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'message' => 'No se pudieron listar los datos.',
+            'error' => $th->getMessage()
+        ], 500);
+    }
+}
+
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -129,7 +149,7 @@ class VehicleController extends Controller
             $vehicle->model=$request->model;
             $vehicle->brand=$request->brand;
             $vehicle->ability=$request->ability;
-            $vehicle->photo =$request->photo;
+            //$vehicle->photo =$request->photo;
             $vehicle->state =$request->state;
             $vehicle->update();
 

@@ -16,7 +16,7 @@ class VehicleDriver extends Model
         'vehicle_id',
         'driver_id',
         'date_assigment',//fecha de asignacion
-        'date_deallocation',// fecha de desasignación
+        'date_deallocation'// fecha de desasignación
 
     ];
 

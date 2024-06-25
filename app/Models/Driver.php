@@ -39,4 +39,9 @@ class Driver extends Model
         return $this->belongsToMany(Vehicle::class, 'vehicle_driver');
     }
 
+    public function orderDrivers()
+    {
+        return $this->hasMany(OrderDriver::class);
+    }
+
 }

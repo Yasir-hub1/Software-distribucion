@@ -22,11 +22,11 @@ const Login = ({ navigation }) => {
   const [Error, setError] = useState(null);
   const [loading, setloading] = useState(false);
 
-  //TODO: Inicializacion de Onboarding
+  /* //TODO: Inicializacion de Onboarding
   useEffect(() => {
     localStorage.onboarding(navigation);
   }, []);
-
+ */
 
   /* Errores de formulario */
   const {

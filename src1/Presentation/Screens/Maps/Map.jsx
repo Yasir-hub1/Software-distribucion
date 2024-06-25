@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Button, Alert,StyleSheet,TouchableOpacity,Text } from 'react-native';
+import { View, Button, Alert,StyleSheet,TouchableOpacity,Text, SafeAreaView } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import axios from 'axios';
 import * as Location from 'expo-location';
@@ -24,6 +24,7 @@ const Map = ({ route ,navigation}) => {
     const socketRef = useRef(null);
     const locationSubscriptionRef = useRef(null);
     const [loading, setLoading] = useState(false);
+    const [estimatedTime, setEstimatedTime] = useState(null);
     useEffect(() => {
         const connectSocket = () => {
             // Conectar con el servidor socket.io
@@ -141,14 +142,15 @@ const Map = ({ route ,navigation}) => {
         }; */
 
     const findRoute = async () => {
+      
         if (!origin || !destination) {
-            alert("Please select both origin and destination");
+            alert("Active su ubicacion");
             return;
         }
 
         try {
             setLoading(true)
-            const response = await axios.post('http://192.168.100.211:1000/findRoute/', {
+            const response = await axios.post('http://3.86.44.143:3000/findRoute/', {
                 origin: { latitude: origin.latitude, longitude: origin.longitude },
                 destination: { latitude: destination.latitude, longitude: destination.longitude }
             });
@@ -156,9 +158,11 @@ const Map = ({ route ,navigation}) => {
             const routeCoordinates = response.data.route;
             setRoute(routeCoordinates);
             await getTrafficInfo();
+            await getEstimatedTime(); // Obtener el tiempo estimado de recorrido
             // sendNotification();
         } catch (error) {
-            console.error(error);
+            // console.error(error);
+            alert('Error al obtener la ruta optima.Servidor inestable');
         }finally{
             setLoading(false)
         }
@@ -179,6 +183,7 @@ const Map = ({ route ,navigation}) => {
 
     const terminar = async() => {
         setIsStarted(false);
+      
         try {
             let data={
                 id_order:item.id,
@@ -190,7 +195,7 @@ const Map = ({ route ,navigation}) => {
           } catch (error) {
            console.log(error)
           }finally{
-          
+           
           }
         // Logic for the Terminar button
     };
@@ -240,102 +245,130 @@ const Map = ({ route ,navigation}) => {
             setTrafficConditions(trafficData);
 
         } catch (error) {
-            console.error('Error fetching traffic info:', error);
+            alert('Error al obtener el tráfico de la ruta.');
         }
     };
 
-    console.log("DESTINO ", destination)
+    const getEstimatedTime = async () => {
+        const googleApiKey = 'AIzaSyABHJaLOgaxiB3mVzOaJpMd8VDDgxfCBHE';
+        const directionsUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=${googleApiKey}`;
+
+        try {
+            const response = await axios.get(directionsUrl);
+            const route = response.data.routes[0];
+            if (!route) {
+                console.log('No routes found');
+                return;
+            }
+
+            const duration = route.legs[0].duration.text;
+            setEstimatedTime(duration);
+            alert(`Tiempo estimado de recorrido: ${duration}`);
+        } catch (error) {
+            alert('Error al obtener el tiempo de recorrido.');
+        }
+    };
+
+   /*  console.log("DESTINO ", destination)
     console.log("ORIGEN  ", origin)
+    console.log("estimatedTime  ", estimatedTime) */
 
     return (
-        <>
-          {<Loading isVisible={loading} text="Optimizando ruta..." />}
+        <SafeAreaView style={{ flex: 1 }}>
+            <Loading isVisible={loading} text="Optimizando ruta..." />
             <View style={{ flex: 1 }}>
+                <View style={styles.topCard}>
+                    <Text style={styles.estimatedTimeText}>
+                        Tiempo estimado: {estimatedTime ? estimatedTime : '...'}
+                    </Text>
+                </View>
                 {destination && destination.latitude ?
-                    <>
-                        <MapView
-                            ref={mapRef}
-                            onMapLoaded={() =>
-                                mapRef.current.animateCamera({
-                                    center: { destination },
-                                    pitch: 10,
-                                    heading: 0,
-                                    altitude: 2000,
-                                    zoom: 16,
-                                })
-                            }
-                            style={{ flex: 1 }}
-                            showsTraffic={true}
-                            loadingEnabled={true}
-                            showsUserLocation={true}
-                            initialRegion={{
-                                latitude: -17.7848,
-                                longitude: -63.1805,
-                                latitudeDelta: 0.0922,
-                                longitudeDelta: 0.0421
-                            }}
-                        /* onPress={(e) => {
-                            const coordinate = e.nativeEvent.coordinate;
-                            if (!origin) {
-                                setOrigin(coordinate);
-                            } else if (!destination) {
-                                setDestination(coordinate);
-                            }
-                        }} */
-                        >
-                            {origin && (
-                                <Marker
-                                    coordinate={origin}
-                                    draggable
-                                    description='Origen'
-                                    title='origen'
-                                // onDragEnd={(e) => setOrigin(e.nativeEvent.coordinate)}
-                                />
-                            )}
-                            {destination && (
-                                <Marker
-                                    coordinate={destination}
-                                    // draggable
-                                    description='Destino'
-                                    title='destino'
-                                // onDragEnd={(e) => setDestination(e.nativeEvent.coordinate)}
-                                />
-                            )}
-                            {routes.length > 0 && (
-                                <Polyline
-                                    coordinates={routes}
-                                    strokeColor="#000"
-                                    strokeWidth={6}
-                                />
-                            )}
-                        </MapView>
-                        {/* <Button title="Find Route" onPress={findRoute} /> */}
-                        <View style={styles.buttonContainer}>
-                        {/* <TouchableOpacity style={styles.button} onPress={findRoute}>
-                            <Text style={styles.buttonText}>Find Route</Text>
-                        </TouchableOpacity> */}
-                        {isStarted ? (
-                            <TouchableOpacity style={styles.button} onPress={terminar}>
-                                <Text style={styles.buttonText}>Terminar</Text>
-                            </TouchableOpacity>
-                        ) : (
-                            <TouchableOpacity style={styles.button} onPress={iniciar}>
-                                <Text style={styles.buttonText}>Iniciar</Text>
-                            </TouchableOpacity>
+                    <MapView
+                        ref={mapRef}
+                        onMapLoaded={() =>
+                            mapRef.current.animateCamera({
+                                center: { destination },
+                                pitch: 10,
+                                heading: 0,
+                                altitude: 2000,
+                                zoom: 16,
+                            })
+                        }
+                        style={{ flex: 1 }}
+                        showsTraffic={true}
+                        loadingEnabled={true}
+                        showsUserLocation={true}
+                        initialRegion={{
+                            latitude: -17.7848,
+                            longitude: -63.1805,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421
+                        }}
+                    >
+                        {origin && (
+                            <Marker
+                                coordinate={origin}
+                                draggable
+                                description='Origen'
+                                title='origen'
+                            />
                         )}
-                        <TouchableOpacity style={styles.button} onPress={findRoute}>
-                            <Text style={styles.buttonText}>Calcular</Text>
-                        </TouchableOpacity>
-                    </View>
-                    </>
+                        {destination && (
+                            <Marker
+                                coordinate={destination}
+                                description='Destino'
+                                title='destino'
+                            />
+                        )}
+                        {routes.length > 0 && (
+                            <Polyline
+                                coordinates={routes}
+                                strokeColor="#000"
+                                strokeWidth={6}
+                            />
+                        )}
+                    </MapView>
                     : null
-
                 }
+                <View style={styles.buttonContainer}>
+                    {isStarted ? (
+                        <TouchableOpacity style={styles.button} onPress={terminar}>
+                            <Text style={styles.buttonText}>Terminar</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity style={styles.button} onPress={iniciar}>
+                            <Text style={styles.buttonText}>Iniciar</Text>
+                        </TouchableOpacity>
+                    )}
+                    <TouchableOpacity style={styles.button} onPress={findRoute}>
+                        <Text style={styles.buttonText}>Calcular</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </>
+        </SafeAreaView>
     );
 };
 const styles = StyleSheet.create({
+    topCard: {
+        position: 'absolute',
+        top: 60,
+        left: 10,
+        right: 10,
+        backgroundColor: '#fff',
+        padding: 10,
+        borderRadius: 10,
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        zIndex: 1,
+    },
+    estimatedTimeText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
     buttonContainer: {
         position: 'absolute',
         bottom: 20,

@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DeliveryController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderDetailController;
+use App\Http\Controllers\Api\ReportController;
 //use App\Models\Vehicle;
 use Illuminate\Support\Facades\Route;
 
@@ -68,9 +69,9 @@ Route::get("/delete-address/{id_customer}", [AddressController::class, "destroy"
 
 //CRUD DE VEHÍCULOS
 Route::post("/store-vehicles", [VehicleController::class, "store"]);
-Route::get("/show-vehicles", [VehicleController::class, "show"]);  
+Route::get("/show-vehicles", [VehicleController::class, "show"]);
 Route::post("/update-vehicles/{vehicle}", [VehicleController::class, "update"]);
-Route::get("/delete-vehicles/{vehicle}", [VehicleController::class, "destroy"]); 
+Route::get("/delete-vehicles/{vehicle}", [VehicleController::class, "destroy"]);
 
 // CRUD DE PRODUCTOS
 Route::post("/store-product", [ProductController::class, "store"]);
@@ -104,6 +105,31 @@ Route::get("/chofer-disponible", [DriverController::class, "getAvailableDrivers"
 
 Route::get("/listar-delivery", [DeliveryController::class, "listarDelivery"]);
 
+
+
+//TODO CONSULTAS HTTP PARA EL CLIENTE
+
+//TODO: ESTAOD DE PEDIDO
+Route::get("/show-orders-progres", [OrderController::class, "getOrderProgres"]);
+Route::get("/show-orders-pendiente", [OrderController::class, "getOrderPendiente"]);
+Route::get("/show-orders-terminado", [OrderController::class, "getOrderTerminado"]);
+
+
+//TODO CONULSTAS DEL DRIVER
+Route::get("/show-orders-driver-pendiente", [OrderController::class, "getPendingOrdersByDriver"]);
+Route::get("/show-orders-driver-completado", [OrderController::class, "getCompletedDeliveriesByDriver"]);
+Route::get("/show-next-orders-driver", [OrderController::class, "getFutureCompletedDeliveriesByDriver"]);
+
+
+//TODO: INICIALIZACION DE ORDEN
+Route::post("/orders-start", [OrderController::class, "orderStart"]);// cambia el estado de la orden de pendiente a en progreso
+Route::post("/orders-complet", [OrderController::class, "orderComplet"]);// cambia el estado de la orden de pendiente a en progreso
+
+//PARA LOS REPORTES
+Route::post('/customers-frec',[ReportController::class,'getCustomersFrec']);
+Route::post('/drivers',[ReportController::class,'getDrivers']);
+Route::post('/orders-year',[ReportController::class,'getOrdesYear']);
+
 /*Route::group(['middleware' => ["auth:sanctum"]], function () {
 
     Route::prefix('admin')->group(function () {
@@ -129,10 +155,10 @@ Route::get("/listar-delivery", [DeliveryController::class, "listarDelivery"]);
 
         //CRUD DE VEHÍCULOS
         Route::post("/store-vehicles", [VehicleController::class, "store"]);
-        Route::get("/show-vehicles", [VehicleController::class, "show"]);  
+        Route::get("/show-vehicles", [VehicleController::class, "show"]);
         Route::post("/update-vehicles/{vehicle}", [VehicleController::class, "update"]);
-        Route::get("/delete-vehicles/{vehicle}", [VehicleController::class, "destroy"]); 
-        
+        Route::get("/delete-vehicles/{vehicle}", [VehicleController::class, "destroy"]);
+
         // CRUD DE PRODUCTOS
         Route::post("/store-product", [ProductController::class, "store"]);
         Route::get("/show-product", [ProductController::class, "show"]);

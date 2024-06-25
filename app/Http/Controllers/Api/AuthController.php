@@ -26,7 +26,7 @@ class AuthController extends Controller
     {
         request()->validate([
             "username" => "required",
-            "password" => "required|min:8|max:20",
+            "password" => "required|min:6|max:20",
             "device_name" => "required"
 
         ]);
@@ -114,7 +114,7 @@ class AuthController extends Controller
     {
         request()->validate([
             "username" => "required",
-            "password" => "required|min:8|max:20",
+            "password" => "required|min:6|max:20",
             "device_name" => "required"
 
         ]);
@@ -199,7 +199,7 @@ class AuthController extends Controller
             "phone" => request("phone"),
             "email" => request("email"),
 
-            "id_cities"=>request("id_cities"),
+            "id_cities"=>request("id_cities") ? request("id_cities") : 1,
             "id_user" => $user->id,
 
 

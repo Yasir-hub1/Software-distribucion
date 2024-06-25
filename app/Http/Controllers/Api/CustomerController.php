@@ -126,7 +126,7 @@ class CustomerController extends Controller
              ], 500); // Puedes ajustar el código de estado HTTP según sea necesario
          }
      }
-     
+
 
     /**
      * Remove the specified resource from storage.
@@ -136,7 +136,7 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        dd($customer);
+        // dd($customer);
         $customer->delete();
         return $this->success(
             __("Se eliminó correctamente"),

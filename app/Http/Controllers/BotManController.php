@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use BotMan\BotMan\BotMan;
 use BotMan\BotMan\Messages\Incoming\Answer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class BotManController extends Controller
 {
@@ -442,8 +443,11 @@ class BotManController extends Controller
     public function replyContact($botman)
     {
         $botman->reply('Puedes contactar a nuestro equipo de soporte a través del siguiente enlace de WhatsApp: ' .
-            '<a href="https://api.whatsapp.com/send?phone=+59175633655&text=hola," target="_blank">Contactar por WhatsApp</a>');
+            '<a href="https://api.whatsapp.com/send?phone=+59175633655&text=hola," target="_blank">Contactar por WhatsApp</a><br><br>' .
+            'O puedes enviar un mensaje por correo electrónico llenando el siguiente formulario: ' .
+            '<a href="/contact-form" target="_blank">Formulario de contacto</a>');
     }
+    
 
 
     public function replyTecnology($botman)
@@ -483,4 +487,28 @@ class BotManController extends Controller
             'Para más detalles y coordinar una sesión de formación, te recomendamos contactar directamente a nuestro equipo a través del siguiente enlace de WhatsApp: ' .
             '<a href="https://api.whatsapp.com/send?phone=+59175633655&text=Hola,%20me%20gustaría%20obtener%20más%20información%20sobre%20la%20formación%20en%20aplicaciones%20desarrolladas." target="_blank">Contactar por WhatsApp</a>.');
     }
+
+    public function sendEmail(Request $request)
+    {
+        $data = [
+            'message' => $request->input('mensaje'),
+            'name' => $request->input('name'),
+            'email' => $request->input('destinatario'),
+            'subject' => $request->input('subject')
+        ];
+    
+        Mail::send([], [], function ($message) use ($data) {
+            $message->to($data['email'])
+                    ->subject($data['subject'])
+                    ->html('Mensaje: ' . $data['message'] . '<br>Nombre: ' . $data['name']);
+        });
+    
+        if (Mail::failures()) {
+            return response()->json(['error' => 'Error al enviar el correo.']);
+        } else {
+            return response()->json(['success' => 'Correo enviado correctamente.']);
+        }
+    }
+    
+
 }

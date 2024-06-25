@@ -61,4 +61,21 @@ class DeliveryController extends Controller
             ], 500);
         }
     }
+
+    public function listarDelivery(Delivery $delivery){
+        try {
+            // Obtener todos los vehículos con estado 'disponible'
+            $deliveries = $delivery::all();
+    
+            return response()->json([
+                'message' => 'Lista de vehículos disponibles',
+                'deliveries' => $deliveries
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'No se pudieron listar los datos.',
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
 }

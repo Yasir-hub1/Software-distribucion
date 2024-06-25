@@ -86,11 +86,12 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     // CustomerController.php
-    public function show()
+    public function show(Customer $customer)
     {
         try {
-            $customers = Customer::with('city')->get();
-            return response()->json(['customers' => $customers]);
+            $customers = $customer::with('city')->get();
+            return response()->json([
+                'customers' => $customers]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error fetching customers', 'message' => $e->getMessage()], 500);
         }

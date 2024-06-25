@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DeliveryController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderDetailController;
-use App\Models\Vehicle;
+//use App\Models\Vehicle;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -102,6 +102,7 @@ Route::post('delivery/{order}/register-delivery', [DeliveryController::class, 'r
 Route::get("/vehiculo-disponible", [VehicleController::class, "getVehiculosDisponibles"]);
 Route::get("/chofer-disponible", [DriverController::class, "getAvailableDrivers"]);
 
+Route::get("/listar-delivery", [DeliveryController::class, "listarDelivery"]);
 
 /*Route::group(['middleware' => ["auth:sanctum"]], function () {
 

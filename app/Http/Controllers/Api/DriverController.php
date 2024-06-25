@@ -57,14 +57,18 @@ class DriverController extends Controller
      */
     public function show(Driver $driver): JsonResponse
     {
-        $drivers = $driver::with('city','user')->get();
-        return $this->success(
-            __("Lista de transportistas"),
-            [
-                "drivers" => $drivers->toArray(),
-
-            ]
-        );
+        try {
+            $drivers = $driver::with('city','user')->get();
+            return response()->json([
+                'message' => 'Lista de ciudades',
+                'drivers' => $drivers
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'error' => 'Error al obtener la lista de choferes',
+                'details' => $th->getMessage(),
+            ], 500);
+        }
     }
 
 

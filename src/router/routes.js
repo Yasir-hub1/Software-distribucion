@@ -6,12 +6,12 @@ import Notifications from "@/pages/Notifications.vue";
 import Icons from "@/pages/Icons.vue";
 import Maps from "@/pages/Maps.vue";
 import Typography from "@/pages/Typography.vue";
-import TableList from "@/pages/TableList.vue";
 import Login from "@/pages/Login.vue";
 import Products from "../pages/Products.vue";
 import Vehicles from "../pages/Vehicles.vue";
 import Reports from "../pages/Reports.vue";
 import Dispatch_orders from "../pages/Dispatch_orders.vue";
+import Delivery from "@/pages/Delivery.vue";
 
 const routes = [
   {
@@ -80,9 +80,9 @@ const routes = [
         component: Typography,
       },
       {
-        path: "/dashboard/table-list",
-        name: "table-list",
-        component: TableList,
+        path: "/dashboard/delivery",
+        name: "Asignacion de recursos",
+        component: Delivery,
       },
     ],
   },

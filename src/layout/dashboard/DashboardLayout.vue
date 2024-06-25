@@ -8,7 +8,7 @@
         <sidebar-link to="/dashboard/vehicles" name="Vehiculos" icon="ti-truck" />
         <sidebar-link to="/dashboard/reports" name="Reportes" icon="ti-bar-chart-alt" />
         <sidebar-link to="/dashboard/dispatch_orders" name="Ordenes de Despacho" icon="ti-view-list-alt" />
-        <sidebar-link to="/dashboard/table-list" name="Table List" icon="ti-view-list-alt" />
+        <sidebar-link to="/dashboard/delivery" name="Asignacion de recursos" icon="ti-view-list-alt" />
         <sidebar-link to="/dashboard/typography" name="Typography" icon="ti-text" />
         <sidebar-link to="/dashboard/icons" name="Icons" icon="ti-pencil-alt2" />
         <sidebar-link to="/dashboard/maps" name="Map" icon="ti-map" />

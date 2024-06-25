@@ -66,8 +66,8 @@
                   <label for="state" class="form-label">Estado:</label>
                   <select class="form-control" id="state" v-model="formData.state" required>
                     <option value="" disabled>Seleccione Estado</option>
-                    <option value="Disponible">Disponible</option>
-                    <option value="No Disponible">No Disponible</option>
+                    <option value="disponible">Disponible</option>
+                    <option value="no disponible">No Disponible</option>
                   </select>
                 </div>
 

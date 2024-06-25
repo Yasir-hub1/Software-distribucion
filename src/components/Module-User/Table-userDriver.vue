@@ -74,7 +74,7 @@
                 </div>
                                     
                   <button type="submit" class="btn btn-success">Guardar</button>
-                  <button type="button" class="btn btn-secondary">Cancelar</button>
+                  <button type="button" class="btn btn-secondary" @click="cancel">Cancelar</button>
 
                 </form>
               </card>
@@ -92,7 +92,7 @@ import toast from "vue-toast-notification";
 const tableColumns = ["#", "name", "CI", "phone", "Direccion", "Foto", "Ciudad", "Opciones"];
 
 export default {
- // name: "Table-userDriver",
+  name: "Table-userDriver",
   props: {
     type: {
       type: String, // striped | hover
@@ -265,6 +265,9 @@ export default {
 
         }
       }
+    },
+    cancel() {
+      this.stateForm = 0;
     },
   },
   mounted() {

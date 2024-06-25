@@ -14,7 +14,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(item, index) in orders" :key="index">
+                  <tr v-for="(item, index) in paginatedOrders" :key="index">
                     <td>{{ item.id }}</td>
                     <td>{{ item.date }}</td>
                     <td>{{ item.state }}</td>
@@ -24,59 +24,76 @@
                       <button class="btn btn-outline-success" type="button" @click="ver(item)">Ver</button>
                       <button class="btn btn-outline-warning" type="button" @click="edit(item)">Editar</button>
                       <button class="btn btn-outline-danger" type="button" @click="asignar(item)">Asignar</button>
-                     <!--  <button class="btn btn-outline-danger" type="button" @click="eliminarItem(item.id)">Anular</button> -->
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
+            <!-- Agregar controles de paginación -->
+            <nav aria-label="Page navigation example">
+              <ul class="pagination justify-content-center">
+                <li class="page-item" :class="{ 'disabled': currentPage === 1 }">
+                  <a class="page-link" href="#" aria-label="Previous" @click.prevent="prevPage">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <li class="page-item" v-for="page in paginatedPages" :key="page" :class="{ 'active': currentPage === page }">
+                  <a class="page-link" href="#" @click.prevent="changePage(page)">{{ page }}</a>
+                </li>
+                <li class="page-item" :class="{ 'disabled': currentPage === totalPages }">
+                  <a class="page-link" href="#" aria-label="Next" @click.prevent="nextPage">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </card>
         </div>
       </template>
 
-      <!-- Formulario para agregar/editar -->
-      <form class="row g-3">
-        <template v-if="stateForm === 1 || stateForm === 2">
-          <div class="container mt-3">
-            <card :title="stateForm === 1 ? 'Agregar Orden' : 'Actualizar Datos'">
-              <form @submit.prevent="send_form_data">
-                <div class="col-12">
-                  <label for="date" class="form-label">Fecha:</label>
-                  <input type="text" class="form-control" id="date" v-model="formData.date">
-                </div>
-                <div class="col-12">
-                  <label for="state" class="form-label">Estado:</label>
-                  <select class="form-control" id="state" v-model="formData.state" required>
-                    <option value="" disabled>Seleccione Estado</option>
-                    <option value="pendiente">Pendiente</option>
-                    <option value="progreso">Progreso</option>
-                    <option value="completado">Completado</option>
-                  </select>
-                </div>
-                <div class="col-12">
-                  <label for="latitud" class="form-label">Latitud:</label>
-                  <input type="text" class="form-control" id="latitud" v-model="formData.latitud">
-                </div>
-                <div class="col-12">
-                  <label for="longitud" class="form-label">Longitud:</label>
-                  <input type="text" class="form-control" id="longitud" v-model="formData.longitud">
-                </div>
-                <div class="form-group row">
-                  <label for="customer_id" class="col-12">Cliente:</label>
-                  <div class="col-sm-9">
-                    <select id="customer_id" class="form-control" v-model="formData.customer_id" required>
-                      <option value="" disabled>Seleccione el Cliente</option>
-                      <option v-for="customer in customers" :key="customer.id" :value="customer.id">{{ customer.nombre }}</option>
+    <!-- Formulario para agregar/editar -->
+    <template>
+      <div>
+        <form class="row g-3">
+          <template v-if="stateForm === 1 || stateForm === 2">
+            <div class="container mt-3">
+              <card :title="stateForm === 1 ? 'Agregar Orden' : 'Actualizar Datos'">
+                <form @submit.prevent="send_form_data">
+                  <div class="col-12">
+                    <label for="date" class="form-label">Fecha:</label>
+                    <input type="date" class="form-control" id="date" v-model="formData.date">
+                  </div>
+                  <div class="col-12">
+                    <label for="state" class="form-label">Estado:</label>
+                    <select class="form-control" id="state" v-model="formData.state" required>
+                      <option value="" disabled>Seleccione Estado</option>
+                      <option value="pendiente">Pendiente</option>
+                      <option value="progreso">Progreso</option>
+                      <option value="completado">Completado</option>
                     </select>
                   </div>
-                </div>
-                <button type="submit" class="btn btn-success">Guardar</button>
-                <button type="button" class="btn btn-secondary" @click="cancel()">Cancelar</button>
-              </form>
-            </card>
-          </div>
-        </template>
-      </form>
+
+                  <!-- Componente del Mapa -->
+                  <MapComponent :formData="formData" />
+
+                  <div class="form-group row">
+                    <label for="customer_id" class="col-12">Cliente:</label>
+                    <div class="col-sm-9">
+                      <select id="customer_id" class="form-control" v-model="formData.customer_id" required>
+                        <option value="" disabled>Seleccione el Cliente</option>
+                        <option v-for="customer in customers" :key="customer.id" :value="customer.id">{{ customer.nombre }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-success">Guardar</button>
+                  <button type="button" class="btn btn-secondary" @click="cancel()">Cancelar</button>
+                </form>
+              </card>
+            </div>
+          </template>
+        </form>
+      </div>
+    </template>
 
       <!-- Formulario para agregar detalles -->
       <form class="row g-3" v-if="stateForm === 3">
@@ -173,11 +190,16 @@
 
 <script>
 import axios from "axios";
+import MapComponent from '@/components/MapComponent.vue';
 
 const tableColumns = ["#", "Fecha", "Estado", "Total", "Cliente", "Opciones"];
+const pageSize = 10; // Tamaño de página
 
 export default {
   name: 'DispatchManager',
+  components: {
+    MapComponent
+  },
   data() {
     return {
       activeTab: 'admin',
@@ -200,19 +222,36 @@ export default {
         latitud: "",
         longitud: "",
         customer_id: 0,
-        vehicle_id: null, // Nuevo campo para almacenar el vehículo seleccionado
-        driver_id: null, // Nuevo campo para almacenar el chofer seleccionado
+        vehicle_id: null, 
+        driver_id: null, 
       },
       array_car_driver: [],
       selectedProducts: [],
       productCounts: {},
       orderDetails: [],
       createdOrder: null,
+      currentPage: 1, // Página actual
     };
   },
   computed: {
-    tableClass() {
-      return `table-${this.type}`;
+   // Calcular el listado paginado
+   paginatedOrders() {
+      const startIndex = (this.currentPage - 1) * pageSize;
+      return this.orders.slice(startIndex, startIndex + pageSize);
+    },
+    // Calcular el total de páginas
+    totalPages() {
+      return Math.ceil(this.orders.length / pageSize);
+    },
+    // Calcular la secuencia de páginas para mostrar en la paginación
+    paginatedPages() {
+      let pages = [];
+      let startPage = Math.floor((this.currentPage - 1) / 10) * 10 + 1; // Empezar desde el inicio de la secuencia
+      let endPage = Math.min(startPage + 9, this.totalPages); // Mostrar máximo 10 números de página
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+      return pages;
     },
   },
   methods: {
@@ -298,6 +337,7 @@ export default {
           longitud: this.formData.longitud,
           customer_id: this.formData.customer_id,
         });
+        console.log(this.formData);
         this.$toast.success(res.data.message);
         this.createdOrder = res.data.order;
         this.stateForm = 3; // Cambia al formulario de detalles
@@ -423,6 +463,19 @@ export default {
     eliminarItem(id) {
       // Implementa la lógica para eliminar el ítem
     },
+    changePage(page) {
+      this.currentPage = page;
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    }
   },
   mounted() {
     this.getOrder();

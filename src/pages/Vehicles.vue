@@ -55,7 +55,11 @@
                 </div>
                 <div class="col-12">
                   <label for="ability" class="form-label">Capacidad:</label>
-                  <input type="text" class="form-control" id="ability" v-model="formData.ability" required placeholder="123456">
+                  <select class="form-control" id="ability" v-model="formData.ability" required>
+                    <option value="" disabled>Seleccione tonelaje</option>
+                    <option value="2 toneladas">2 toneladas</option>
+                    <option value="3 toneladas">3 toneladas</option>
+                  </select>
                 </div>
                <!--  <div class="col-12">
                   <label for="photo" class="form-label">Foto:</label>

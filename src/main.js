@@ -1,18 +1,14 @@
 /*!
+=========================================================
+* Vue Paper Dashboard - v1.0.1
+=========================================================
+* Product Page: http://www.creative-tim.com/product/paper-dashboard
+* Copyright 2023 Creative Tim (http://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard/blob/master/LICENSE.md)
+=========================================================
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*/
 
- =========================================================
- * Vue Paper Dashboard - v1.0.1
- =========================================================
-
- * Product Page: http://www.creative-tim.com/product/paper-dashboard
- * Copyright 2023 Creative Tim (http://www.creative-tim.com)
- * Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard/blob/master/LICENSE.md)
-
- =========================================================
-
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
- */
 import Vue from "vue";
 import BootstrapVue from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -26,6 +22,19 @@ import "vue-notifyjs/themes/default.css";
 import axios from "axios";
 import ToastPlugin from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-bootstrap.css";
+
+// Añadir script de Google Maps de manera correcta
+const script = document.createElement('script');
+script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyABHJaLOgaxiB3mVzOaJpMd8VDDgxfCBHE`; 
+script.async = true;
+script.onload = () => {
+  new Vue({
+    router,
+    render: (h) => h(App),
+  }).$mount("#app");
+};
+document.head.appendChild(script);
+
 
 axios.defaults.baseURL = "http://192.168.0.8:8000/api";
 
